@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ActivitySettings">
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:padding="16dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/back_icon" />
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:paddingStart="12dp"
+            android:paddingTop="14dp"
+            android:paddingBottom="16dp"
+            android:text="@string/settings"
+            android:textColor="#1A1B22"
+            android:textSize="22sp" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="24dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/dark_theme"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:paddingStart="16dp"
+            android:paddingTop="21dp"
+            android:paddingBottom="21dp"/>
+
+        <Switch
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:paddingEnd="12dp"
+            android:paddingTop="11dp"
+            android:paddingBottom="11dp"
+            tools:ignore="RtlSymmetry,UseSwitchCompatOrMaterialXml" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/share_app"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:paddingStart="16dp"
+            android:paddingTop="21dp"
+            android:paddingBottom="21dp"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:padding="19dp"
+            android:layout_gravity="end"
+            android:src="@drawable/share_icon" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/write_to_support"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:paddingStart="16dp"
+            android:paddingTop="21dp"
+            android:paddingBottom="21dp"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:padding="19dp"
+            android:layout_gravity="end"
+            android:src="@drawable/support_icon" />
+
+    </FrameLayout>
+
+    <FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/user_agreement"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:paddingStart="16dp"
+        android:paddingTop="21dp"
+        android:paddingBottom="21dp"/>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:padding="19dp"
+        android:layout_gravity="end"
+        android:src="@drawable/arrow_icon" />
+
+</FrameLayout>
+
+
+</LinearLayout>
