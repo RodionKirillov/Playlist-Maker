@@ -2,8 +2,31 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="main_background_button_color">#ffffff</color>
+
+
+    <color name="main_background_color">#3772E7</color>
+    <color name="main_background_color_night">#1A1B22</color>
+
+
+    <color name="text_color_settings">#000000</color>
     <color name="text_color_main">#1A1B22</color>
-    <color name="background_color">#ffffff</color>
-    <color name="main_color">#3772E7</color>
-    <color name="settings_color_text">#000000</color>
+    <color name="switch_color">#3772E7</color>
+
+
+    <color name="settings_background_color">#ffffff</color>
+    <color name="settings_background_color_night">#1A1B22</color>
+    <color name="text_color_settings_night">#ffffff</color>
+
+    <color name="icon_color_settings">#AEAFB4</color>
+    <color name="icon_color_settings_night">#ffffff</color>
+
+
+
+    <color name="background_tint_search">#E6E8EB</color>
+    <color name="background_tint_text">#AEAFB4</color>
+
+
+
 </resources>
