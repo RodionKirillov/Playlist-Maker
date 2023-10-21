@@ -24,18 +24,15 @@ class ActivitySettings : AppCompatActivity() {
         val arrowButton = findViewById<FrameLayout>(R.id.arrow_button)
 
         image.setOnClickListener {
-            val backIntent = Intent(this, MainActivity::class.java)
-            startActivity(backIntent)
+            onBackPressed()
         }
 
         shareButton.setOnClickListener {
-            val shareIntent = Intent(
-                Intent.ACTION_VIEW,
-                Uri.parse(getString(R.string.practicum_yandex_android_developer))
-            )
-            startActivity(shareIntent)
+            val shareIntent = Intent(Intent.ACTION_SEND)
+            shareIntent.type = "text/plain"
+            shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.practicum_yandex_android_developer))
+            startActivity(Intent.createChooser(shareIntent, null))
         }
-
 
         supportButton.setOnClickListener {
             val message = getString(R.string.support_message)
@@ -43,6 +40,7 @@ class ActivitySettings : AppCompatActivity() {
             shareIntent.data = Uri.parse("mailto:")
             shareIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.my_email)))
             shareIntent.putExtra(Intent.EXTRA_TEXT, message)
+            shareIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.subject_message))
             startActivity(shareIntent)
         }
 
