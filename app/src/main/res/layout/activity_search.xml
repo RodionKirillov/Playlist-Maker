@@ -26,7 +26,6 @@
         <EditText
             android:id="@+id/editTextSearch"
             style="@style/SearchStyle"
-            android:textColor="@color/black"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -35,7 +34,8 @@
             android:hint="@string/search_hint"
             android:inputType="text"
             android:maxLines="1"
-            android:padding="4dp" />
+            android:padding="4dp"
+            android:textColor="@color/black" />
 
         <ImageView
             android:id="@+id/clear_icon"
@@ -46,6 +46,14 @@
             android:visibility="invisible" />
 
     </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerviewTrack"
+        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/track_item" />
 
 
 </LinearLayout>

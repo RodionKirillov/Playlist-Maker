@@ -29,4 +29,12 @@
         <item name="android:background">@color/background_tint_search</item>
     </style>
 
+    <style name="TrackItemStyle">
+        <item name="android:textColor">@color/text_color_settings_night</item>
+    </style>
+
+    <style name="TrackItemStyle2">
+        <item name="android:textColor">@color/text_color_settings_night</item>
+    </style>
+
 </resources>
