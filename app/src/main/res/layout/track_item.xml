@@ -13,7 +13,7 @@
         android:layout_marginVertical="8dp"
         android:layout_marginStart="13dp"
         android:contentDescription="@null"
-        tools:srcCompat="@drawable/ic_launcher_background" />
+        tools:srcCompat="@drawable/placeholder_icon" />
 
     <LinearLayout
         android:layout_width="0dp"
@@ -43,12 +43,6 @@
             <TextView
                 android:id="@+id/artistName"
                 style="@style/TrackItemStyle2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:fontFamily="@font/ys_display_regular"
-                android:maxLines="1"
-                android:textSize="11sp"
                 tools:text="The Beatles" />
 
             <ImageView
@@ -60,12 +54,6 @@
             <TextView
                 android:id="@+id/trackTime"
                 style="@style/TrackItemStyle2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:fontFamily="@font/ys_display_regular"
-                android:maxLines="1"
-                android:textSize="11sp"
                 tools:text="4:01" />
         </LinearLayout>
     </LinearLayout>

@@ -30,17 +30,12 @@ class TrackAdapter(
 
     class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        private val trackName: TextView
-        private val artistName: TextView
-        private val trackTime: TextView
-        private val trackImage: ImageView
+        private val roundedTrackImage = 5
 
-        init {
-            trackName = itemView.findViewById(R.id.trackName)
-            artistName = itemView.findViewById(R.id.artistName)
-            trackTime = itemView.findViewById(R.id.trackTime)
-            trackImage = itemView.findViewById(R.id.trackImage)
-        }
+        private val trackName: TextView = itemView.findViewById(R.id.trackName)
+        private val artistName: TextView = itemView.findViewById(R.id.artistName)
+        private val trackTime: TextView = itemView.findViewById(R.id.trackTime)
+        private val trackImage: ImageView = itemView.findViewById(R.id.trackImage)
 
         fun bind(model: Track) {
             trackName.text = model.trackName
@@ -48,9 +43,9 @@ class TrackAdapter(
             trackTime.text = model.trackTime
             Glide.with(itemView.context)
                 .load(model.artworkUrl100)
-                .placeholder(R.drawable.ic_launcher_background)
+                .placeholder(R.drawable.placeholder_icon)
                 .centerCrop()
-                .transform(RoundedCorners(5))
+                .transform(RoundedCorners(roundedTrackImage))
                 .into(trackImage)
         }
     }
