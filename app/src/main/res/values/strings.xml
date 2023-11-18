@@ -15,4 +15,8 @@
     <string name="my_email">rodion.44454@gmail.com</string>
     <string name="yandex_practicum_offer">https://yandex.ru/legal/practicum_offer/</string>
     <string name="subject_message">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
+    <string name="refresh_search">Обновить</string>
+    <string name="internet_error2">Загрузка не удалась. Проверьте подключение к интернету</string>
+    <string name="internet_error1">Проблемы со связью</string>
+    <string name="search_not_found">Ничего не нашлось</string>
 </resources>

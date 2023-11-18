@@ -44,4 +44,9 @@
         <item name="android:textSize">11sp</item>
     </style>
 
+    <style name="ActivitySearchButton">
+        <item name="android:textColor">@color/text_color_settings_night</item>
+        <item name="android:backgroundTint">@color/settings_background_color_night</item>
+    </style>
+
 </resources>
