@@ -111,10 +111,11 @@ class ActivitySearch : AppCompatActivity() {
                         call: Call<TrackResponse>,
                         response: Response<TrackResponse>
                     ) {
-                        if (response.code() == 200) {
+                        if (response.isSuccessful) {
                             tracks.clear()
-                            if (response.body()?.results?.isNotEmpty() == true) {
-                                tracks.addAll(response.body()?.results!!)
+                            val responseTracks = response.body()?.results
+                            if (responseTracks?.isNotEmpty() == true) {
+                                tracks.addAll(responseTracks)
 
                                 recyclerviewTrack.visibility = View.VISIBLE
                                 trackNotFound.visibility = View.GONE
