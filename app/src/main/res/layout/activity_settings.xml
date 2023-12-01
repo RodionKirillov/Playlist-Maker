@@ -27,15 +27,14 @@
             android:layout_height="wrap_content"
             android:text="@string/dark_theme" />
 
-        <Switch
-            android:id="@+id/switch_settings_dark_theme"
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/themeSwitcher"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="end"
             android:paddingTop="11dp"
             android:paddingEnd="12dp"
-            android:paddingBottom="11dp"
-            tools:ignore="RtlSymmetry,UseSwitchCompatOrMaterialXml" />
+            android:paddingBottom="11dp" />
     </FrameLayout>
 
     <FrameLayout

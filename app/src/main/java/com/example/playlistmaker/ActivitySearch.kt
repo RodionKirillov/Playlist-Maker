@@ -1,10 +1,9 @@
 package com.example.playlistmaker
 
 import android.content.Context
-import android.content.Intent
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -14,7 +13,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.ScrollView
 import android.widget.Toolbar
 import androidx.recyclerview.widget.RecyclerView
 import retrofit2.Call
@@ -22,7 +21,6 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
 
 class ActivitySearch : AppCompatActivity() {
 
@@ -41,11 +39,15 @@ class ActivitySearch : AppCompatActivity() {
     private lateinit var editTextSearch: EditText
     private lateinit var clearIcon: ImageView
     private lateinit var recyclerviewTrack: RecyclerView
+    private lateinit var recyclerviewHistoryTrack: RecyclerView
+    private lateinit var historyTrack: ScrollView
+    private lateinit var cleanHistoryButton: Button
+
     private lateinit var trackNotFound: LinearLayout
     private lateinit var internetError: LinearLayout
     private lateinit var refreshButton: Button
 
-    private val tracks = ArrayList<Track>()
+    private val trackList = ArrayList<Track>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,7 +55,41 @@ class ActivitySearch : AppCompatActivity() {
 
         initViews()
 
-        recyclerviewTrack.adapter = TrackAdapter(tracks)
+        val sharedPrefsHistory = getSharedPreferences(SHARED_PREFS_HISTORY, MODE_PRIVATE)
+        val searchHistory = SearchHistory(sharedPrefsHistory)
+
+        recyclerviewTrack.adapter = TrackAdapter(trackList) {
+            searchHistory.addSearchHistory(it)
+        }
+
+
+        recyclerviewHistoryTrack.adapter = HistoryTrackAdapter(searchHistory.getSearchHistory())
+
+        val listener = OnSharedPreferenceChangeListener { sharedPreferences, key ->
+            if (key == SHARED_PREFS_HISTORY_KEY) {
+                val json = sharedPreferences.getString(SHARED_PREFS_HISTORY_KEY, null)
+                if (json != null) {
+                    recyclerviewHistoryTrack.adapter?.notifyDataSetChanged()
+                }
+            }
+        }
+        sharedPrefsHistory.registerOnSharedPreferenceChangeListener(listener)
+
+        cleanHistoryButton.setOnClickListener {
+            historyTrack.visibility = View.GONE
+            searchHistory.clearSearchHistory()
+            recyclerviewHistoryTrack.adapter?.notifyDataSetChanged()
+        }
+
+
+        editTextSearch.setOnFocusChangeListener { view, hasFocus ->
+            historyTrack.visibility =
+                if (hasFocus && editTextSearch.text.isNullOrEmpty() && searchHistory.getSearchHistory().size > 0) {
+                    View.VISIBLE
+                } else {
+                    View.GONE
+                }
+        }
 
         editTextSearch.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -73,7 +109,7 @@ class ActivitySearch : AppCompatActivity() {
 
         clearIcon.setOnClickListener {
             editTextSearch.setText("")
-            tracks.clear()
+            trackList.clear()
             recyclerviewTrack.adapter?.notifyDataSetChanged()
             val inputMethodManager =
                 getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
@@ -88,6 +124,8 @@ class ActivitySearch : AppCompatActivity() {
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 stringEditText = p0.toString()
                 clearIcon.visibility = clearButtonVisibility(p0)
+                historyTrack.visibility =
+                    if (editTextSearch.hasFocus() && p0?.isEmpty() == true) View.VISIBLE else View.GONE
             }
 
             override fun afterTextChanged(p0: Editable?) {
@@ -112,10 +150,10 @@ class ActivitySearch : AppCompatActivity() {
                         response: Response<TrackResponse>
                     ) {
                         if (response.isSuccessful) {
-                            tracks.clear()
+                            trackList.clear()
                             val responseTracks = response.body()?.results
                             if (responseTracks?.isNotEmpty() == true) {
-                                tracks.addAll(responseTracks)
+                                trackList.addAll(responseTracks)
 
                                 recyclerviewTrack.visibility = View.VISIBLE
                                 trackNotFound.visibility = View.GONE
@@ -123,7 +161,7 @@ class ActivitySearch : AppCompatActivity() {
 
                                 recyclerviewTrack.adapter?.notifyDataSetChanged()
                             }
-                            if (tracks.isEmpty()) {
+                            if (trackList.isEmpty()) {
                                 recyclerviewTrack.visibility = View.GONE
                                 trackNotFound.visibility = View.VISIBLE
                                 internetError.visibility = View.GONE
@@ -157,6 +195,9 @@ class ActivitySearch : AppCompatActivity() {
         editTextSearch = findViewById(R.id.editTextSearch)
         clearIcon = findViewById(R.id.clear_icon)
         recyclerviewTrack = findViewById(R.id.recyclerviewTrack)
+        recyclerviewHistoryTrack = findViewById(R.id.recyclerviewHistoryTrack)
+        historyTrack = findViewById(R.id.historyTrack)
+        cleanHistoryButton = findViewById(R.id.cleanHistoryButton)
         trackNotFound = findViewById(R.id.trackNotFound)
         internetError = findViewById(R.id.internetError)
         refreshButton = findViewById(R.id.refreshButton)
@@ -164,5 +205,6 @@ class ActivitySearch : AppCompatActivity() {
 
     companion object {
         private const val STRING_EDIT_TEXT = "STRING_EDIT_TEXT"
+        const val SHARED_PREFS_HISTORY = "SHARED_PREFS_HISTORY"
     }
 }

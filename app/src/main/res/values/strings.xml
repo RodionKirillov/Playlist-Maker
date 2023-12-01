@@ -19,4 +19,6 @@
     <string name="internet_error2">Загрузка не удалась. Проверьте подключение к интернету</string>
     <string name="internet_error1">Проблемы со связью</string>
     <string name="search_not_found">Ничего не нашлось</string>
+    <string name="search_history_textview">Вы искали</string>
+    <string name="clean_history">Очистить историю</string>
 </resources>

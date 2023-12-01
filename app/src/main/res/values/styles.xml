@@ -49,4 +49,8 @@
         <item name="android:backgroundTint">@color/settings_background_color_night</item>
     </style>
 
+    <style name="TextStyle">
+        <item name="android:textColor">@color/text_color_main</item>
+    </style>
+
 </resources>
