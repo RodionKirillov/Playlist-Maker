@@ -1,6 +1,8 @@
 package com.example.playlistmaker
 
+import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -12,25 +14,43 @@ import android.widget.Switch
 import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SwitchCompat
+import com.example.playlistmaker.App.Companion.KEY_NIGHT_THEME
+import com.example.playlistmaker.App.Companion.SHARED_PREFS
+import com.google.android.material.switchmaterial.SwitchMaterial
 
 class ActivitySettings : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
-        val image = findViewById<Toolbar>(R.id.back_button)
+        val backButton = findViewById<Toolbar>(R.id.back_button)
         val shareButton = findViewById<FrameLayout>(R.id.share_button)
         val supportButton = findViewById<FrameLayout>(R.id.support_button)
         val arrowButton = findViewById<FrameLayout>(R.id.arrow_button)
+        val themeSwitcher = findViewById<SwitchMaterial>(R.id.themeSwitcher)
 
-        image.setOnClickListener {
+
+        when (resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK)) {
+            Configuration.UI_MODE_NIGHT_YES -> themeSwitcher.isChecked = true
+            Configuration.UI_MODE_NIGHT_NO -> themeSwitcher.isChecked = false
+            Configuration.UI_MODE_NIGHT_UNDEFINED -> themeSwitcher.isChecked = false
+        }
+
+        themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
+            (applicationContext as App).switchTheme(checked)
+        }
+
+        backButton.setOnClickListener {
             onBackPressed()
         }
 
         shareButton.setOnClickListener {
             val shareIntent = Intent(Intent.ACTION_SEND)
             shareIntent.type = "text/plain"
-            shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.practicum_yandex_android_developer))
+            shareIntent.putExtra(
+                Intent.EXTRA_TEXT,
+                getString(R.string.practicum_yandex_android_developer)
+            )
             startActivity(Intent.createChooser(shareIntent, null))
         }
 
