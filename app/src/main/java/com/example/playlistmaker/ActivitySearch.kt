@@ -1,6 +1,7 @@
 package com.example.playlistmaker
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -38,14 +39,16 @@ class ActivitySearch : AppCompatActivity() {
     private lateinit var backButton: Toolbar
     private lateinit var editTextSearch: EditText
     private lateinit var clearIcon: ImageView
-    private lateinit var recyclerviewTrack: RecyclerView
+    private lateinit var recyclerviewSearchTrack: RecyclerView
     private lateinit var recyclerviewHistoryTrack: RecyclerView
     private lateinit var historyTrack: ScrollView
     private lateinit var cleanHistoryButton: Button
-
     private lateinit var trackNotFound: LinearLayout
     private lateinit var internetError: LinearLayout
     private lateinit var refreshButton: Button
+
+    private lateinit var sharedPrefsHistory: SharedPreferences
+    private lateinit var listener: OnSharedPreferenceChangeListener
 
     private val trackList = ArrayList<Track>()
 
@@ -55,17 +58,16 @@ class ActivitySearch : AppCompatActivity() {
 
         initViews()
 
-        val sharedPrefsHistory = getSharedPreferences(SHARED_PREFS_HISTORY, MODE_PRIVATE)
+        sharedPrefsHistory = getSharedPreferences(SHARED_PREFS_HISTORY, MODE_PRIVATE)
         val searchHistory = SearchHistory(sharedPrefsHistory)
 
-        recyclerviewTrack.adapter = TrackAdapter(trackList) {
+        recyclerviewSearchTrack.adapter = TrackAdapter(trackList) {
             searchHistory.addSearchHistory(it)
         }
 
+        recyclerviewHistoryTrack.adapter = TrackAdapter(searchHistory.getSearchHistory()) {}
 
-        recyclerviewHistoryTrack.adapter = HistoryTrackAdapter(searchHistory.getSearchHistory())
-
-        val listener = OnSharedPreferenceChangeListener { sharedPreferences, key ->
+        listener = OnSharedPreferenceChangeListener { sharedPreferences, key ->
             if (key == SHARED_PREFS_HISTORY_KEY) {
                 val json = sharedPreferences.getString(SHARED_PREFS_HISTORY_KEY, null)
                 if (json != null) {
@@ -110,7 +112,7 @@ class ActivitySearch : AppCompatActivity() {
         clearIcon.setOnClickListener {
             editTextSearch.setText("")
             trackList.clear()
-            recyclerviewTrack.adapter?.notifyDataSetChanged()
+            recyclerviewSearchTrack.adapter?.notifyDataSetChanged()
             val inputMethodManager =
                 getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
@@ -155,14 +157,14 @@ class ActivitySearch : AppCompatActivity() {
                             if (responseTracks?.isNotEmpty() == true) {
                                 trackList.addAll(responseTracks)
 
-                                recyclerviewTrack.visibility = View.VISIBLE
+                                recyclerviewSearchTrack.visibility = View.VISIBLE
                                 trackNotFound.visibility = View.GONE
                                 internetError.visibility = View.GONE
 
-                                recyclerviewTrack.adapter?.notifyDataSetChanged()
+                                recyclerviewSearchTrack.adapter?.notifyDataSetChanged()
                             }
                             if (trackList.isEmpty()) {
-                                recyclerviewTrack.visibility = View.GONE
+                                recyclerviewSearchTrack.visibility = View.GONE
                                 trackNotFound.visibility = View.VISIBLE
                                 internetError.visibility = View.GONE
                             }
@@ -170,7 +172,7 @@ class ActivitySearch : AppCompatActivity() {
                     }
 
                     override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-                        recyclerviewTrack.visibility = View.GONE
+                        recyclerviewSearchTrack.visibility = View.GONE
                         trackNotFound.visibility = View.GONE
                         internetError.visibility = View.VISIBLE
 
@@ -194,13 +196,18 @@ class ActivitySearch : AppCompatActivity() {
         backButton = findViewById(R.id.backButton)
         editTextSearch = findViewById(R.id.editTextSearch)
         clearIcon = findViewById(R.id.clear_icon)
-        recyclerviewTrack = findViewById(R.id.recyclerviewTrack)
+        recyclerviewSearchTrack = findViewById(R.id.recyclerviewSearchTrack)
         recyclerviewHistoryTrack = findViewById(R.id.recyclerviewHistoryTrack)
         historyTrack = findViewById(R.id.historyTrack)
         cleanHistoryButton = findViewById(R.id.cleanHistoryButton)
         trackNotFound = findViewById(R.id.trackNotFound)
         internetError = findViewById(R.id.internetError)
         refreshButton = findViewById(R.id.refreshButton)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        sharedPrefsHistory.unregisterOnSharedPreferenceChangeListener(listener)
     }
 
     companion object {

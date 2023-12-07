@@ -3,9 +3,11 @@ package com.example.playlistmaker
 import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.google.gson.JsonArray
+import com.google.gson.reflect.TypeToken
 import java.io.Serializable
 
 const val SHARED_PREFS_HISTORY_KEY = "SHARED_PREFS_HISTORY_KEY"
+const val maxHistoryItem = 10
 
 class SearchHistory(
     private val sharedPreferences: SharedPreferences
@@ -15,7 +17,7 @@ class SearchHistory(
         historyTrack.removeAll { it.trackId == track.trackId }
         historyTrack.add(0, track)
 
-        if (historyTrack.size > 10) historyTrack.removeAt(historyTrack.size - 1)
+        if (historyTrack.size > maxHistoryItem) historyTrack.removeAt(historyTrack.size - 1)
 
         sharedPreferences.edit()
             .putString(SHARED_PREFS_HISTORY_KEY, createJsonFromTrack(historyTrack))
@@ -28,19 +30,14 @@ class SearchHistory(
     }
 
     private fun createTracksFromJson(json: String): ArrayList<Track> {
-        val tracks = ArrayList<Track>()
-        val gson = Gson()
-        val result = gson.fromJson(json, JsonArray::class.java)
-        for (track in result) {
-            val track = gson.fromJson(track.toString(), Track::class.java)
-            tracks.add(track)
-        }
-        return tracks
+        val type = object : TypeToken<ArrayList<Track>>() {}.type
+        return Gson().fromJson(json, type)
     }
 
     private fun createJsonFromTrack(tracksArray: ArrayList<Track>): String {
         return Gson().toJson(tracksArray)
     }
+
     fun clearSearchHistory() {
         sharedPreferences.edit().clear().apply()
     }

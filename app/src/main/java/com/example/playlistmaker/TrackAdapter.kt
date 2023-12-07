@@ -37,37 +37,6 @@ class TrackAdapter(
     override fun getItemCount(): Int = trackList.size
 }
 
-class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-    private val roundedTrackImage = 5
-
-    private val trackName: TextView = itemView.findViewById(R.id.trackName)
-    private val artistName: TextView = itemView.findViewById(R.id.artistName)
-    private val trackTime: TextView = itemView.findViewById(R.id.trackTime)
-    private val trackImage: ImageView = itemView.findViewById(R.id.trackImage)
-
-    private fun trackTimeFormat(trackTime: String): String {
-        return SimpleDateFormat(
-            "mm:ss",
-            Locale.getDefault()
-        ).format(
-            trackTime.toInt()
-        )
-    }
-
-    fun bind(model: Track) {
-        trackName.text = model.trackName
-        artistName.text = model.artistName.trim()
-        trackTime.text = trackTimeFormat(model.trackTime)
-        Glide.with(itemView.context)
-            .load(model.artworkUrl100)
-            .placeholder(R.drawable.placeholder_icon)
-            .centerCrop()
-            .transform(RoundedCorners(roundedTrackImage))
-            .into(trackImage)
-    }
-}
-
 fun interface OnTrackClickListener {
     fun onTrackClick(track: Track)
 }

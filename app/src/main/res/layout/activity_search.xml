@@ -50,7 +50,7 @@
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerviewTrack"
+        android:id="@+id/recyclerviewSearchTrack"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="16dp"
@@ -135,6 +135,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -158,8 +159,8 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="8dp"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/track_item"
-                tools:itemCount="4"/>
+                tools:itemCount="4"
+                tools:listitem="@layout/track_item" />
 
             <Button
                 android:id="@+id/cleanHistoryButton"
@@ -175,7 +176,6 @@
 
         </LinearLayout>
     </ScrollView>
-
 
 
 </LinearLayout>
