@@ -52,4 +52,15 @@
     <style name="TextStyle">
         <item name="android:textColor">@color/settings_background_color</item>
     </style>
+
+    <style name="PlayerTrackInfoTextStyle">
+        <item name="android:textColor">@color/settings_background_color</item>
+    </style>
+
+    <style name="PlayerTrackInfoDescriptionTextStyle">
+        <item name="android:textColor">@color/icon_color_settings</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+    </style>
 </resources>

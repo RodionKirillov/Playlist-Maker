@@ -15,14 +15,14 @@ class PlayerActivity : AppCompatActivity() {
 
     private lateinit var backButtonPlayerActivity: android.widget.Toolbar
     private lateinit var trackImage: ImageView
-    private lateinit var trackName: TextView
-    private lateinit var artistName: TextView
-    private lateinit var trackTime: TextView
-    private lateinit var trackTimeTextView: TextView
-    private lateinit var albumTextView: TextView
-    private lateinit var yearTextView: TextView
-    private lateinit var genreTextView: TextView
-    private lateinit var countryTextView: TextView
+    private lateinit var tvTrackName: TextView
+    private lateinit var tvArtistName: TextView
+    private lateinit var tvTrackTimePlay: TextView
+    private lateinit var tvTrackTime: TextView
+    private lateinit var tvAlbumName: TextView
+    private lateinit var tvYearName: TextView
+    private lateinit var tvGenreName: TextView
+    private lateinit var tvCountryName: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,8 +35,9 @@ class PlayerActivity : AppCompatActivity() {
         initTrackInfo(track)
 
     }
-    private fun getCoverArtwork(track: Track){
-        track.artworkUrl100.replaceAfterLast('/',"512x512bb.jpg")
+
+    private fun getCoverArtwork(track: Track): String {
+        return track.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg")
     }
 
     private fun initTrackInfo(track: Track) {
@@ -47,17 +48,17 @@ class PlayerActivity : AppCompatActivity() {
             .transform(RoundedCorners(dpToPx(8f, this)))
             .into(trackImage)
 
-        trackName.text = track.trackName
-        artistName.text = track.artistName
-        trackTime.text = timeFormat(track.trackTime.toInt())
-        trackTimeTextView.text = timeFormat(track.trackTime.toInt())
-        albumTextView.text = track.collectionName
-        yearTextView.text = SimpleDateFormat(
+        tvTrackName.text = track.trackName
+        tvArtistName.text = track.artistName
+        tvTrackTimePlay.text = timeFormat(track.trackTime.toInt())
+        tvTrackTime.text = timeFormat(track.trackTime.toInt())
+        tvAlbumName.text = track.collectionName
+        tvYearName.text = SimpleDateFormat(
             "yyyy",
             Locale.getDefault()
         ).format(track.releaseDate)
-        genreTextView.text = track.primaryGenreName
-        countryTextView.text = track.country
+        tvGenreName.text = track.primaryGenreName
+        tvCountryName.text = track.country
     }
 
     private fun timeFormat(track: Int): String {
@@ -72,14 +73,14 @@ class PlayerActivity : AppCompatActivity() {
     private fun initViews() {
         backButtonPlayerActivity = findViewById(R.id.backButtonPlayerActivity)
         trackImage = findViewById(R.id.trackImage)
-        trackName = findViewById(R.id.trackName)
-        artistName = findViewById(R.id.artistName)
-        trackTime = findViewById(R.id.trackTime)
-        trackTimeTextView = findViewById(R.id.trackTimeTextView)
-        albumTextView = findViewById(R.id.albumTextView)
-        yearTextView = findViewById(R.id.yearTextView)
-        genreTextView = findViewById(R.id.genreTextView)
-        countryTextView = findViewById(R.id.countryTextView)
+        tvTrackName = findViewById(R.id.tvTrackName)
+        tvArtistName = findViewById(R.id.tvArtistName)
+        tvTrackTimePlay = findViewById(R.id.tvTrackTimePlay)
+        tvTrackTime = findViewById(R.id.tvTrackTime)
+        tvAlbumName = findViewById(R.id.tvAlbumName)
+        tvYearName = findViewById(R.id.tvYearName)
+        tvGenreName = findViewById(R.id.tvGenreName)
+        tvCountryName = findViewById(R.id.tvCountryName)
     }
 
     private fun getTrack(): Track {

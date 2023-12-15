@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:navigationIcon="@drawable/back_icon"
+        app:layout_constraintBottom_toTopOf="@id/trackImage"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -33,10 +34,9 @@
         android:id="@+id/trackImage"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="26dp"
         android:contentDescription="@null"
         android:src="@drawable/placeholder_icon"
-        app:layout_constraintBottom_toTopOf="@id/trackName"
+        app:layout_constraintBottom_toTopOf="@id/tvTrackName"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toStartOf="@id/rightBorder"
         app:layout_constraintStart_toEndOf="@id/leftBorder"
@@ -44,7 +44,7 @@
         tools:background="@color/black" />
 
     <TextView
-        android:id="@+id/trackName"
+        android:id="@+id/tvTrackName"
         style="TextStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -52,13 +52,13 @@
         android:fontFamily="@font/ys_display_medium"
         android:maxLines="1"
         android:textSize="22sp"
-        app:layout_constraintBottom_toTopOf="@id/artistName"
+        app:layout_constraintBottom_toTopOf="@id/tvArtistName"
         app:layout_constraintStart_toEndOf="@id/leftBorder"
         app:layout_constraintTop_toBottomOf="@id/trackImage"
         tools:text="Yesterday (Remastered 2009)" />
 
     <TextView
-        android:id="@+id/artistName"
+        android:id="@+id/tvArtistName"
         style="TextStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -66,196 +66,172 @@
         android:fontFamily="@font/ys_display_medium"
         android:maxLines="1"
         android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@id/playButton"
+        app:layout_constraintBottom_toTopOf="@id/ivPlayButton"
         app:layout_constraintStart_toEndOf="@id/leftBorder"
-        app:layout_constraintTop_toBottomOf="@id/trackName"
+        app:layout_constraintTop_toBottomOf="@id/tvTrackName"
         tools:text="The Beatles" />
 
     <ImageView
-        android:id="@+id/playButton"
+        android:id="@+id/ivPlayButton"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:contentDescription="@null"
         android:foreground="?attr/selectableItemBackground"
         android:src="@drawable/play_button_light_theme"
-        app:layout_constraintEnd_toStartOf="@id/addToFavoriteButton"
-        app:layout_constraintStart_toEndOf="@id/addToPlaylistButton"
-        app:layout_constraintTop_toBottomOf="@id/artistName" />
+        app:layout_constraintBottom_toTopOf="@id/tvTrackTimePlay"
+        app:layout_constraintEnd_toStartOf="@id/ivAddToFavoriteButton"
+        app:layout_constraintStart_toEndOf="@id/ivAddToPlaylistButton"
+        app:layout_constraintTop_toBottomOf="@id/tvArtistName" />
 
     <ImageView
-        android:id="@+id/addToPlaylistButton"
+        android:id="@+id/ivAddToPlaylistButton"
         android:layout_width="51dp"
         android:layout_height="51dp"
         android:contentDescription="@null"
         android:foreground="?attr/selectableItemBackground"
         android:src="@drawable/add_to_playlist_icon"
-        app:layout_constraintBottom_toBottomOf="@id/playButton"
-        app:layout_constraintEnd_toStartOf="@id/playButton"
+        app:layout_constraintBottom_toBottomOf="@id/ivPlayButton"
+        app:layout_constraintEnd_toStartOf="@id/ivPlayButton"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintStart_toEndOf="@id/leftBorder"
-        app:layout_constraintTop_toTopOf="@id/playButton" />
+        app:layout_constraintTop_toTopOf="@id/ivPlayButton" />
 
     <ImageView
-        android:id="@+id/addToFavoriteButton"
+        android:id="@+id/ivAddToFavoriteButton"
         android:layout_width="51dp"
         android:layout_height="51dp"
         android:contentDescription="@null"
         android:foreground="?attr/selectableItemBackground"
         android:src="@drawable/add_to_favorite_icon"
-        app:layout_constraintBottom_toBottomOf="@id/playButton"
+        app:layout_constraintBottom_toBottomOf="@id/ivPlayButton"
         app:layout_constraintEnd_toStartOf="@id/rightBorder"
-        app:layout_constraintStart_toEndOf="@id/playButton"
-        app:layout_constraintTop_toTopOf="@id/playButton" />
+        app:layout_constraintStart_toEndOf="@id/ivPlayButton"
+        app:layout_constraintTop_toTopOf="@id/ivPlayButton" />
 
     <TextView
-        android:id="@+id/trackTime"
+        android:id="@+id/tvTrackTimePlay"
         style="TextStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:fontFamily="@font/ys_display_medium"
         android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@id/trackTimeNameTextView"
+        app:layout_constraintBottom_toTopOf="@id/tvDescriptionTrackTime"
         app:layout_constraintEnd_toStartOf="@id/rightBorder"
         app:layout_constraintStart_toEndOf="@id/leftBorder"
-        app:layout_constraintTop_toBottomOf="@id/playButton"
+        app:layout_constraintTop_toBottomOf="@id/ivPlayButton"
         tools:text="0:30" />
 
 
     <TextView
-        android:id="@+id/trackTimeNameTextView"
+        android:id="@+id/tvDescriptionTrackTime"
+        style="@style/PlayerTrackInfoDescriptionTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="32dp"
         android:layout_marginStart="16dp"
-        android:fontFamily="@font/ys_display_regular"
-        android:gravity="center"
         android:text="@string/track_time"
-        android:textColor="@color/icon_color_settings"
-        android:textSize="13sp"
+        app:layout_constraintBottom_toTopOf="@+id/tvDescriptionAlbumName"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/trackTime" />
+        app:layout_constraintTop_toBottomOf="@id/tvTrackTimePlay" />
 
     <TextView
-        android:id="@+id/albumNameTextView"
+        android:id="@+id/tvDescriptionAlbumName"
+        style="@style/PlayerTrackInfoDescriptionTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="32dp"
         android:layout_marginStart="16dp"
-        android:fontFamily="@font/ys_display_regular"
-        android:gravity="center"
         android:text="@string/album"
-        android:textColor="@color/icon_color_settings"
-        android:textSize="13sp"
+        app:layout_constraintBottom_toTopOf="@+id/tvDescriptionYearName"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/trackTimeNameTextView" />
+        app:layout_constraintTop_toBottomOf="@id/tvDescriptionTrackTime" />
 
     <TextView
-        android:id="@+id/yearNameTextView"
+        android:id="@+id/tvDescriptionYearName"
+        style="@style/PlayerTrackInfoDescriptionTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="32dp"
         android:layout_marginStart="16dp"
-        android:fontFamily="@font/ys_display_regular"
-        android:gravity="center"
         android:text="@string/year"
-        android:textColor="@color/icon_color_settings"
-        android:textSize="13sp"
+        app:layout_constraintBottom_toTopOf="@+id/tvDescriptionGenreName"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/albumNameTextView" />
+        app:layout_constraintTop_toBottomOf="@id/tvDescriptionAlbumName" />
 
     <TextView
-        android:id="@+id/genreNameTextView"
+        android:id="@+id/tvDescriptionGenreName"
+        style="@style/PlayerTrackInfoDescriptionTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="32dp"
         android:layout_marginStart="16dp"
-        android:fontFamily="@font/ys_display_regular"
-        android:gravity="center"
         android:text="@string/genre"
-        android:textColor="@color/icon_color_settings"
-        android:textSize="13sp"
+        app:layout_constraintBottom_toTopOf="@+id/tvDescriptionCountryName"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/yearNameTextView" />
+        app:layout_constraintTop_toBottomOf="@id/tvDescriptionYearName" />
 
     <TextView
-        android:id="@+id/countryNameTextView"
+        android:id="@+id/tvDescriptionCountryName"
+        style="@style/PlayerTrackInfoDescriptionTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="32dp"
         android:layout_marginStart="16dp"
         android:layout_marginBottom="20dp"
-        android:fontFamily="@font/ys_display_regular"
-        android:gravity="center"
         android:text="@string/country"
-        android:textColor="@color/icon_color_settings"
-        android:textSize="13sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/genreNameTextView" />
+        app:layout_constraintTop_toBottomOf="@id/tvDescriptionGenreName" />
 
     <TextView
-        android:id="@+id/trackTimeTextView"
-        style="TextStyle"
+        android:id="@+id/tvTrackTime"
+        style="@style/PlayerTrackInfoTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="32dp"
         android:layout_marginEnd="16dp"
-        android:fontFamily="@font/ys_display_regular"
-        android:gravity="center"
-        android:textSize="13sp"
-        app:layout_constraintBottom_toBottomOf="@id/trackTimeNameTextView"
+        app:layout_constraintBottom_toBottomOf="@id/tvDescriptionTrackTime"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/trackTimeNameTextView"
+        app:layout_constraintTop_toTopOf="@id/tvDescriptionTrackTime"
         tools:text="5:35" />
 
     <TextView
-        android:id="@+id/albumTextView"
-        style="TextStyle"
+        android:id="@+id/tvAlbumName"
+        style="@style/PlayerTrackInfoTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="32dp"
         android:layout_marginEnd="16dp"
-        android:fontFamily="@font/ys_display_regular"
-        android:gravity="center"
-        android:textSize="13sp"
-        app:layout_constraintBottom_toBottomOf="@id/albumNameTextView"
+        app:layout_constraintBottom_toBottomOf="@id/tvDescriptionAlbumName"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/albumNameTextView"
+        app:layout_constraintTop_toTopOf="@id/tvDescriptionAlbumName"
         tools:text="Yesterday (Remastered 2009)" />
 
     <TextView
-        android:id="@+id/yearTextView"
-        style="TextStyle"
+        android:id="@+id/tvYearName"
+        style="@style/PlayerTrackInfoTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="32dp"
         android:layout_marginEnd="16dp"
-        android:fontFamily="@font/ys_display_regular"
-        android:gravity="center"
-        android:textSize="13sp"
-        app:layout_constraintBottom_toBottomOf="@id/yearNameTextView"
+        app:layout_constraintBottom_toBottomOf="@id/tvDescriptionYearName"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/yearNameTextView"
+        app:layout_constraintTop_toTopOf="@id/tvDescriptionYearName"
         tools:text="1965" />
 
     <TextView
-        android:id="@+id/genreTextView"
-        style="TextStyle"
+        android:id="@+id/tvGenreName"
+        style="@style/PlayerTrackInfoTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="32dp"
         android:layout_marginEnd="16dp"
-        android:fontFamily="@font/ys_display_regular"
-        android:gravity="center"
-        android:textSize="13sp"
-        app:layout_constraintBottom_toBottomOf="@id/genreNameTextView"
+        app:layout_constraintBottom_toBottomOf="@id/tvDescriptionGenreName"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/genreNameTextView"
+        app:layout_constraintTop_toTopOf="@id/tvDescriptionGenreName"
         tools:text="Rock" />
 
     <TextView
-        android:id="@+id/countryTextView"
-        style="TextStyle"
+        android:id="@+id/tvCountryName"
+        style="@style/PlayerTrackInfoTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="32dp"
         android:layout_marginEnd="16dp"
-        android:fontFamily="@font/ys_display_regular"
-        android:gravity="center"
-        android:textSize="13sp"
-        app:layout_constraintBottom_toBottomOf="@id/countryNameTextView"
+        app:layout_constraintBottom_toBottomOf="@id/tvDescriptionCountryName"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/countryNameTextView"
+        app:layout_constraintTop_toTopOf="@id/tvDescriptionCountryName"
         tools:text="Великобритания" />
 
 
