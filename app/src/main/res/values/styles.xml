@@ -53,4 +53,18 @@
         <item name="android:textColor">@color/text_color_main</item>
     </style>
 
+    <style name="PlayerTrackInfoTextStyle">
+        <item name="android:textColor">@color/text_color_main</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+    </style>
+
+    <style name="PlayerTrackInfoDescriptionTextStyle">
+        <item name="android:textColor">@color/icon_color_settings</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+    </style>
+
 </resources>

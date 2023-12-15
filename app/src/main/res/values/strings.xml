@@ -21,4 +21,9 @@
     <string name="search_not_found">Ничего не нашлось</string>
     <string name="search_history_textview">Вы искали</string>
     <string name="clean_history">Очистить историю</string>
+    <string name="track_time">Длительность</string>
+    <string name="album">Альбом</string>
+    <string name="year">Год</string>
+    <string name="genre">Жанр</string>
+    <string name="country">Страна</string>
 </resources>

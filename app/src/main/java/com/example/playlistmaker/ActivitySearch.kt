@@ -1,6 +1,7 @@
 package com.example.playlistmaker
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import androidx.appcompat.app.AppCompatActivity
@@ -17,6 +18,7 @@ import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.Toolbar
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -63,9 +65,12 @@ class ActivitySearch : AppCompatActivity() {
 
         recyclerviewSearchTrack.adapter = TrackAdapter(trackList) {
             searchHistory.addSearchHistory(it)
+            launchPlayerActivity(it)
         }
 
-        recyclerviewHistoryTrack.adapter = TrackAdapter(searchHistory.getSearchHistory()) {}
+        recyclerviewHistoryTrack.adapter = TrackAdapter(searchHistory.getSearchHistory()) {
+            launchPlayerActivity(it)
+        }
 
         listener = OnSharedPreferenceChangeListener { sharedPreferences, key ->
             if (key == SHARED_PREFS_HISTORY_KEY) {
@@ -84,7 +89,7 @@ class ActivitySearch : AppCompatActivity() {
         }
 
 
-        editTextSearch.setOnFocusChangeListener { view, hasFocus ->
+        editTextSearch.setOnFocusChangeListener { _, hasFocus ->
             historyTrack.visibility =
                 if (hasFocus && editTextSearch.text.isNullOrEmpty() && searchHistory.getSearchHistory().size > 0) {
                     View.VISIBLE
@@ -141,6 +146,12 @@ class ActivitySearch : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(STRING_EDIT_TEXT, stringEditText)
+    }
+
+    private fun launchPlayerActivity(track: Track) {
+        val intentPlayerActivity = Intent(this, PlayerActivity::class.java)
+        intentPlayerActivity.putExtra(PlayerActivity.TRACK, Gson().toJson(track))
+        startActivity(intentPlayerActivity)
     }
 
     private fun searchTracks() {
