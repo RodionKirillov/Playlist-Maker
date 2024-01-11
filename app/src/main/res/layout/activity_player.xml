@@ -46,13 +46,15 @@
     <TextView
         android:id="@+id/tvTrackName"
         style="TextStyle"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
+        android:ellipsize="end"
         android:fontFamily="@font/ys_display_medium"
         android:maxLines="1"
         android:textSize="22sp"
         app:layout_constraintBottom_toTopOf="@id/tvArtistName"
+        app:layout_constraintEnd_toStartOf="@+id/rightBorder"
         app:layout_constraintStart_toEndOf="@id/leftBorder"
         app:layout_constraintTop_toBottomOf="@id/trackImage"
         tools:text="Yesterday (Remastered 2009)" />
@@ -63,6 +65,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
+        android:ellipsize="end"
         android:fontFamily="@font/ys_display_medium"
         android:maxLines="1"
         android:textSize="14sp"
@@ -78,6 +81,20 @@
         android:contentDescription="@null"
         android:foreground="?attr/selectableItemBackground"
         android:src="@drawable/play_button_light_theme"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@id/tvTrackTimePlay"
+        app:layout_constraintEnd_toStartOf="@id/ivAddToFavoriteButton"
+        app:layout_constraintStart_toEndOf="@id/ivAddToPlaylistButton"
+        app:layout_constraintTop_toBottomOf="@id/tvArtistName" />
+
+    <ImageView
+        android:id="@+id/ivPauseButton"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:contentDescription="@null"
+        android:foreground="?attr/selectableItemBackground"
+        android:src="@drawable/pause_button_light_theme"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@id/tvTrackTimePlay"
         app:layout_constraintEnd_toStartOf="@id/ivAddToFavoriteButton"
         app:layout_constraintStart_toEndOf="@id/ivAddToPlaylistButton"
@@ -115,12 +132,12 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:fontFamily="@font/ys_display_medium"
+        android:text="@string/defolt_track_time"
         android:textSize="14sp"
         app:layout_constraintBottom_toTopOf="@id/tvDescriptionTrackTime"
         app:layout_constraintEnd_toStartOf="@id/rightBorder"
         app:layout_constraintStart_toEndOf="@id/leftBorder"
-        app:layout_constraintTop_toBottomOf="@id/ivPlayButton"
-        tools:text="0:30" />
+        app:layout_constraintTop_toBottomOf="@id/ivPlayButton" />
 
 
     <TextView
@@ -193,11 +210,15 @@
     <TextView
         android:id="@+id/tvAlbumName"
         style="@style/PlayerTrackInfoTextStyle"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="32dp"
         android:layout_marginEnd="16dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textAlignment="textEnd"
         app:layout_constraintBottom_toBottomOf="@id/tvDescriptionAlbumName"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tvDescriptionAlbumName"
         app:layout_constraintTop_toTopOf="@id/tvDescriptionAlbumName"
         tools:text="Yesterday (Remastered 2009)" />
 

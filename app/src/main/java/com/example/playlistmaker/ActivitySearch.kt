@@ -6,6 +6,8 @@ import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -15,6 +17,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.ScrollView
 import android.widget.Toolbar
 import androidx.recyclerview.widget.RecyclerView
@@ -38,6 +41,12 @@ class ActivitySearch : AppCompatActivity() {
 
     private val iTunesSearchAPI = retrofit.create(ITunesSearchAPI::class.java)
 
+    private var isClickAllowed = true
+    private val searchRunnable = Runnable { searchTracks() }
+    private val handler = Handler(Looper.getMainLooper())
+
+
+
     private lateinit var backButton: Toolbar
     private lateinit var editTextSearch: EditText
     private lateinit var clearIcon: ImageView
@@ -48,6 +57,7 @@ class ActivitySearch : AppCompatActivity() {
     private lateinit var trackNotFound: LinearLayout
     private lateinit var internetError: LinearLayout
     private lateinit var refreshButton: Button
+    private lateinit var progressBar: ProgressBar
 
     private lateinit var sharedPrefsHistory: SharedPreferences
     private lateinit var listener: OnSharedPreferenceChangeListener
@@ -64,12 +74,16 @@ class ActivitySearch : AppCompatActivity() {
         val searchHistory = SearchHistory(sharedPrefsHistory)
 
         recyclerviewSearchTrack.adapter = TrackAdapter(trackList) {
-            searchHistory.addSearchHistory(it)
-            launchPlayerActivity(it)
+            if (clickDebounce()) {
+                searchHistory.addSearchHistory(it)
+                launchPlayerActivity(it)
+            }
         }
 
         recyclerviewHistoryTrack.adapter = TrackAdapter(searchHistory.getSearchHistory()) {
-            launchPlayerActivity(it)
+            if (clickDebounce()) {
+                launchPlayerActivity(it)
+            }
         }
 
         listener = OnSharedPreferenceChangeListener { sharedPreferences, key ->
@@ -96,14 +110,6 @@ class ActivitySearch : AppCompatActivity() {
                 } else {
                     View.GONE
                 }
-        }
-
-        editTextSearch.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                searchTracks()
-                true
-            }
-            false
         }
 
         backButton.setOnClickListener {
@@ -133,6 +139,7 @@ class ActivitySearch : AppCompatActivity() {
                 clearIcon.visibility = clearButtonVisibility(p0)
                 historyTrack.visibility =
                     if (editTextSearch.hasFocus() && p0?.isEmpty() == true) View.VISIBLE else View.GONE
+                searchDebounce()
             }
 
             override fun afterTextChanged(p0: Editable?) {
@@ -156,6 +163,8 @@ class ActivitySearch : AppCompatActivity() {
 
     private fun searchTracks() {
         if (stringEditText.isNotEmpty()) {
+            progressBar.visibility = View.VISIBLE
+
             iTunesSearchAPI.search(stringEditText)
                 .enqueue(object : Callback<TrackResponse> {
                     override fun onResponse(
@@ -171,6 +180,7 @@ class ActivitySearch : AppCompatActivity() {
                                 recyclerviewSearchTrack.visibility = View.VISIBLE
                                 trackNotFound.visibility = View.GONE
                                 internetError.visibility = View.GONE
+                                progressBar.visibility = View.GONE
 
                                 recyclerviewSearchTrack.adapter?.notifyDataSetChanged()
                             }
@@ -178,6 +188,7 @@ class ActivitySearch : AppCompatActivity() {
                                 recyclerviewSearchTrack.visibility = View.GONE
                                 trackNotFound.visibility = View.VISIBLE
                                 internetError.visibility = View.GONE
+                                progressBar.visibility = View.GONE
                             }
                         }
                     }
@@ -186,6 +197,7 @@ class ActivitySearch : AppCompatActivity() {
                         recyclerviewSearchTrack.visibility = View.GONE
                         trackNotFound.visibility = View.GONE
                         internetError.visibility = View.VISIBLE
+                        progressBar.visibility = View.GONE
 
                         refreshButton.setOnClickListener {
                             searchTracks()
@@ -214,6 +226,21 @@ class ActivitySearch : AppCompatActivity() {
         trackNotFound = findViewById(R.id.trackNotFound)
         internetError = findViewById(R.id.internetError)
         refreshButton = findViewById(R.id.refreshButton)
+        progressBar = findViewById(R.id.progressBar)
+    }
+
+    private fun searchDebounce() {
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+    }
+
+    private fun clickDebounce(): Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed({isClickAllowed = true}, CLICK_DEBOUNCE_DELAY)
+        }
+        return current
     }
 
     override fun onDestroy() {
@@ -222,6 +249,8 @@ class ActivitySearch : AppCompatActivity() {
     }
 
     companion object {
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
         private const val STRING_EDIT_TEXT = "STRING_EDIT_TEXT"
         const val SHARED_PREFS_HISTORY = "SHARED_PREFS_HISTORY"
     }
