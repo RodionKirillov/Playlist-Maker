@@ -6,6 +6,7 @@
         <item name="colorSecondary">@color/settings_background_color_night</item>
         <item name="colorOnPrimary">@color/text_color_settings_night</item>
         <item name="colorSecondaryVariant">@color/icon_color_settings_night</item>
+        <item name="colorAccent">@color/main_background_color</item>
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
     </style>
 
