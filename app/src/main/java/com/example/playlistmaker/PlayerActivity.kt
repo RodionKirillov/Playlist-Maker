@@ -54,7 +54,7 @@ class PlayerActivity : AppCompatActivity() {
     private fun createUpdateTimer(): Runnable{
         return object : Runnable {
             override fun run() {
-                if (playerState == 2) {
+                if (playerState == STATE_PLAYING) {
                     tvTrackTimePlay.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(mediaPlayer.currentPosition)
 
                     mainThreadHandler.postDelayed(this, REFRESH_TRACK_TIMER)
