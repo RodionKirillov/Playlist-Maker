@@ -29,7 +29,7 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     fun bind(model: Track) {
         trackName.text = model.trackName
-        artistName.text = model.artistName.trim()
+        artistName.text = model.artistName
         trackTime.text = trackTimeFormat(model.trackTime)
         Glide.with(itemView.context)
             .load(model.artworkUrl100)
@@ -37,6 +37,7 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             .centerCrop()
             .transform(RoundedCorners(dpToPx(2f, itemView.context)))
             .into(trackImage)
+        artistName.requestLayout()
     }
 }
 fun dpToPx(dp: Float, context: Context): Int {

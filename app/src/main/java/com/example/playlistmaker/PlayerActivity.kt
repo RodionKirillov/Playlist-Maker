@@ -55,7 +55,10 @@ class PlayerActivity : AppCompatActivity() {
         return object : Runnable {
             override fun run() {
                 if (playerState == STATE_PLAYING) {
-                    tvTrackTimePlay.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(mediaPlayer.currentPosition)
+                    tvTrackTimePlay.text = SimpleDateFormat(
+                        "mm:ss",
+                        Locale.getDefault()
+                    ).format(mediaPlayer.currentPosition + REFRESH_TRACK_TIMER)
 
                     mainThreadHandler.postDelayed(this, REFRESH_TRACK_TIMER)
                 }
@@ -181,7 +184,7 @@ class PlayerActivity : AppCompatActivity() {
 
     companion object {
         const val TRACK = "TRACK"
-        const val REFRESH_TRACK_TIMER = 300L
+        private const val REFRESH_TRACK_TIMER = 500L
         private const val STATE_DEFAULT = 0
         private const val STATE_PREPARED = 1
         private const val STATE_PLAYING = 2
