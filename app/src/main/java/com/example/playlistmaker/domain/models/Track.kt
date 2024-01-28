@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.domain.models
 
 import android.provider.ContactsContract.Data
 import com.google.gson.annotations.SerializedName
@@ -15,4 +15,4 @@ data class Track(
     val primaryGenreName: String,
     val country: String,
     val previewUrl: String
-    )
+)

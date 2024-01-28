@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.ui.player
 
 import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
@@ -8,17 +8,26 @@ import android.os.Looper
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.widget.Toolbar
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.example.playlistmaker.R
+import com.example.playlistmaker.data.PlayerRepositoryImpl
+import com.example.playlistmaker.domain.Creator
+import com.example.playlistmaker.domain.api.PlayerInteractor
+import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.ui.search.dpToPx
 import com.google.gson.Gson
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 
 class PlayerActivity : AppCompatActivity() {
 
+    private lateinit var interactor: PlayerInteractor
+
     private var playerState = STATE_DEFAULT
-    private var mediaPlayer = MediaPlayer()
+
+    //    private var mediaPlayer = MediaPlayer()
     private var mainThreadHandler = Handler(Looper.getMainLooper())
     private val defaultTimeText = "00:00"
 
@@ -38,6 +47,7 @@ class PlayerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player)
+        interactor = Creator.providePlayerInteractor()
         initViews()
 
         backButtonPlayerActivity.setOnClickListener { finish() }
@@ -51,14 +61,14 @@ class PlayerActivity : AppCompatActivity() {
         ivPauseButton.setOnClickListener { playbackControl() }
     }
 
-    private fun createUpdateTimer(): Runnable{
+    private fun createUpdateTimer(): Runnable {
         return object : Runnable {
             override fun run() {
                 if (playerState == STATE_PLAYING) {
                     tvTrackTimePlay.text = SimpleDateFormat(
                         "mm:ss",
                         Locale.getDefault()
-                    ).format(mediaPlayer.currentPosition + REFRESH_TRACK_TIMER)
+                    ).format(interactor.getCurrentPositionPlaying() + REFRESH_TRACK_TIMER)
 
                     mainThreadHandler.postDelayed(this, REFRESH_TRACK_TIMER)
                 }
@@ -89,33 +99,38 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun startPlayer() {
-        mediaPlayer.start()
+        interactor.startPlaying()
         ivPlayButton.visibility = View.INVISIBLE
         ivPauseButton.visibility = View.VISIBLE
         playerState = STATE_PLAYING
     }
 
     private fun pausePlayer() {
-        mediaPlayer.pause()
+        interactor.pausePlaying()
         ivPlayButton.visibility = View.VISIBLE
         ivPauseButton.visibility = View.INVISIBLE
         playerState = STATE_PAUSED
     }
 
     private fun preparePlaying(track: Track) {
-        mediaPlayer.setDataSource(track.previewUrl)
-        mediaPlayer.prepareAsync()
-        mediaPlayer.setOnPreparedListener {
-            playerState = STATE_PREPARED
-        }
+        interactor.preparePlaying(
+            track,
 
-        mediaPlayer.setOnCompletionListener {
-            ivPlayButton.visibility = View.VISIBLE
-            ivPauseButton.visibility = View.INVISIBLE
-            playerState = STATE_PREPARED
-            removeUpdateTimer()
-            tvTrackTimePlay.text = defaultTimeText
-        }
+            object : PlayerRepositoryImpl.OnPreparedListener {
+                override fun setOnPreparedListener() {
+                    playerState = STATE_PREPARED
+                }
+            },
+
+            object : PlayerRepositoryImpl.OnCompletionListener {
+                override fun setOnCompletionListener() {
+                    ivPlayButton.visibility = View.VISIBLE
+                    ivPauseButton.visibility = View.INVISIBLE
+                    playerState = STATE_PREPARED
+                    removeUpdateTimer()
+                    tvTrackTimePlay.text = defaultTimeText
+                }
+            })
     }
 
     private fun getCoverArtwork(track: Track): String {
@@ -134,10 +149,7 @@ class PlayerActivity : AppCompatActivity() {
         tvArtistName.text = track.artistName
         tvTrackTime.text = timeFormat(track.trackTime.toInt())
         tvAlbumName.text = track.collectionName
-        tvYearName.text = SimpleDateFormat(
-            "yyyy",
-            Locale.getDefault()
-        ).format(track.releaseDate)
+        tvYearName.text = dateFormat(track.releaseDate)
         tvGenreName.text = track.primaryGenreName
         tvCountryName.text = track.country
     }
@@ -149,6 +161,13 @@ class PlayerActivity : AppCompatActivity() {
         ).format(
             track
         )
+    }
+
+    private fun dateFormat(date: Date): String {
+        return SimpleDateFormat(
+            "yyyy",
+            Locale.getDefault()
+        ).format(date)
     }
 
     private fun initViews() {
@@ -178,7 +197,7 @@ class PlayerActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        mediaPlayer.release()
+        interactor.releasePlaying()
         removeUpdateTimer()
     }
 

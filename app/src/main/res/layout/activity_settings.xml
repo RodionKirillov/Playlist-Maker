@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="?attr/colorSecondary"
     android:orientation="vertical"
-    tools:context=".ActivitySettings">
+    tools:context=".ui.settings.ActivitySettings">
 
     <Toolbar
         android:id="@+id/back_button"

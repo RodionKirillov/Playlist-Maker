@@ -1,21 +1,14 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.ui.settings
 
-import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.widget.FrameLayout
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.Switch
 import android.widget.Toolbar
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.appcompat.widget.SwitchCompat
-import com.example.playlistmaker.App.Companion.KEY_NIGHT_THEME
-import com.example.playlistmaker.App.Companion.SHARED_PREFS
+import com.example.playlistmaker.App
+import com.example.playlistmaker.R
 import com.google.android.material.switchmaterial.SwitchMaterial
 
 class ActivitySettings : AppCompatActivity() {

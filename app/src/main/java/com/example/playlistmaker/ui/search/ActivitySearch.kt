@@ -1,9 +1,7 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.ui.search
 
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -11,7 +9,6 @@ import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
@@ -21,31 +18,22 @@ import android.widget.ProgressBar
 import android.widget.ScrollView
 import android.widget.Toolbar
 import androidx.recyclerview.widget.RecyclerView
+import com.example.playlistmaker.ui.player.PlayerActivity
+import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.domain.Creator
+import com.example.playlistmaker.domain.api.TracksInteractor
 import com.google.gson.Gson
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class ActivitySearch : AppCompatActivity() {
 
+    private lateinit var interactor: TracksInteractor
+
     private var stringEditText = ""
-
-    private val baseURL = "https://itunes.apple.com"
-
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(baseURL)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-
-    private val iTunesSearchAPI = retrofit.create(ITunesSearchAPI::class.java)
 
     private var isClickAllowed = true
     private val searchRunnable = Runnable { searchTracks() }
     private val handler = Handler(Looper.getMainLooper())
-
-
 
     private lateinit var backButton: Toolbar
     private lateinit var editTextSearch: EditText
@@ -59,53 +47,43 @@ class ActivitySearch : AppCompatActivity() {
     private lateinit var refreshButton: Button
     private lateinit var progressBar: ProgressBar
 
-    private lateinit var sharedPrefsHistory: SharedPreferences
-    private lateinit var listener: OnSharedPreferenceChangeListener
-
-    private val trackList = ArrayList<Track>()
+    private val trackList = mutableListOf<Track>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
+        interactor = Creator.provideTracksInteractor(this)
 
         initViews()
 
-        sharedPrefsHistory = getSharedPreferences(SHARED_PREFS_HISTORY, MODE_PRIVATE)
-        val searchHistory = SearchHistory(sharedPrefsHistory)
-
         recyclerviewSearchTrack.adapter = TrackAdapter(trackList) {
             if (clickDebounce()) {
-                searchHistory.addSearchHistory(it)
                 launchPlayerActivity(it)
+                addTrackToSearchHistory(it)
             }
         }
 
-        recyclerviewHistoryTrack.adapter = TrackAdapter(searchHistory.getSearchHistory()) {
+        trackList.addAll(interactor.getTracks())
+        recyclerviewHistoryTrack.adapter = TrackAdapter(trackList) {
             if (clickDebounce()) {
                 launchPlayerActivity(it)
+                addTrackToSearchHistory(it)
+                recyclerviewHistoryTrack.adapter?.notifyDataSetChanged()
             }
         }
-
-        listener = OnSharedPreferenceChangeListener { sharedPreferences, key ->
-            if (key == SHARED_PREFS_HISTORY_KEY) {
-                val json = sharedPreferences.getString(SHARED_PREFS_HISTORY_KEY, null)
-                if (json != null) {
-                    recyclerviewHistoryTrack.adapter?.notifyDataSetChanged()
-                }
-            }
-        }
-        sharedPrefsHistory.registerOnSharedPreferenceChangeListener(listener)
 
         cleanHistoryButton.setOnClickListener {
             historyTrack.visibility = View.GONE
-            searchHistory.clearSearchHistory()
+
+            interactor.clearTracks()
+
             recyclerviewHistoryTrack.adapter?.notifyDataSetChanged()
         }
 
 
         editTextSearch.setOnFocusChangeListener { _, hasFocus ->
             historyTrack.visibility =
-                if (hasFocus && editTextSearch.text.isNullOrEmpty() && searchHistory.getSearchHistory().size > 0) {
+                if (hasFocus && editTextSearch.text.isNullOrEmpty() && interactor.getTracks().size > 0) {
                     View.VISIBLE
                 } else {
                     View.GONE
@@ -148,11 +126,20 @@ class ActivitySearch : AppCompatActivity() {
         }
         editTextSearch.addTextChangedListener(searchTextWatcher)
 
+        refreshButton.setOnClickListener {
+            searchTracks()
+        }
+
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(STRING_EDIT_TEXT, stringEditText)
+    }
+
+    private fun addTrackToSearchHistory(track: Track) {
+        interactor.saveTrack(track)
+
     }
 
     private fun launchPlayerActivity(track: Track) {
@@ -165,42 +152,36 @@ class ActivitySearch : AppCompatActivity() {
         if (stringEditText.isNotEmpty()) {
             progressBar.visibility = View.VISIBLE
 
-            iTunesSearchAPI.search(stringEditText)
-                .enqueue(object : Callback<TrackResponse> {
-                    override fun onResponse(
-                        call: Call<TrackResponse>,
-                        response: Response<TrackResponse>
-                    ) {
-                        if (response.isSuccessful) {
-                            trackList.clear()
-                            val responseTracks = response.body()?.results
-                            if (responseTracks?.isNotEmpty() == true) {
-                                trackList.addAll(responseTracks)
+            interactor.searchTracks(
+                stringEditText,
+                consumer = object : TracksInteractor.TracksConsumer {
+                    override fun consume(foundTracks: List<Track>?) {
+                        handler.post {
+                            if (foundTracks == null) {
 
-                                recyclerviewSearchTrack.visibility = View.VISIBLE
-                                trackNotFound.visibility = View.GONE
-                                internetError.visibility = View.GONE
-                                progressBar.visibility = View.GONE
-
-                                recyclerviewSearchTrack.adapter?.notifyDataSetChanged()
-                            }
-                            if (trackList.isEmpty()) {
                                 recyclerviewSearchTrack.visibility = View.GONE
-                                trackNotFound.visibility = View.VISIBLE
-                                internetError.visibility = View.GONE
+                                trackNotFound.visibility = View.GONE
+                                internetError.visibility = View.VISIBLE
                                 progressBar.visibility = View.GONE
+
+                            } else {
+                                if (foundTracks.isNotEmpty()) {
+                                    trackList.clear()
+                                    trackList.addAll(foundTracks)
+
+                                    recyclerviewSearchTrack.visibility = View.VISIBLE
+                                    trackNotFound.visibility = View.GONE
+                                    internetError.visibility = View.GONE
+                                    progressBar.visibility = View.GONE
+
+                                    recyclerviewSearchTrack.adapter?.notifyDataSetChanged()
+                                } else {
+                                    recyclerviewSearchTrack.visibility = View.GONE
+                                    trackNotFound.visibility = View.VISIBLE
+                                    internetError.visibility = View.GONE
+                                    progressBar.visibility = View.GONE
+                                }
                             }
-                        }
-                    }
-
-                    override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-                        recyclerviewSearchTrack.visibility = View.GONE
-                        trackNotFound.visibility = View.GONE
-                        internetError.visibility = View.VISIBLE
-                        progressBar.visibility = View.GONE
-
-                        refreshButton.setOnClickListener {
-                            searchTracks()
                         }
                     }
                 })
@@ -238,14 +219,9 @@ class ActivitySearch : AppCompatActivity() {
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
-            handler.postDelayed({isClickAllowed = true}, CLICK_DEBOUNCE_DELAY)
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
         }
         return current
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        sharedPrefsHistory.unregisterOnSharedPreferenceChangeListener(listener)
     }
 
     companion object {
