@@ -11,18 +11,15 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.TrackItemBinding
 import com.example.playlistmaker.search.domain.model.Track
+import com.example.playlistmaker.util.DateTimeUtil
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class TrackViewHolder(private val binding: TrackItemBinding) : RecyclerView.ViewHolder(binding.root) {
-
-    private val trackTimeFormat = SimpleDateFormat(
-        "mm:ss",
-        Locale.getDefault()
-    )
+class TrackViewHolder(private val binding: TrackItemBinding) :
+    RecyclerView.ViewHolder(binding.root) {
 
     private fun trackTimeFormat(trackTime: String): String {
-        return trackTimeFormat.format(trackTime.toInt())
+        return DateTimeUtil.timeFormat(trackTime.toInt())
     }
 
     fun bind(model: Track) {
@@ -38,9 +35,11 @@ class TrackViewHolder(private val binding: TrackItemBinding) : RecyclerView.View
         binding.artistName.requestLayout()
     }
 }
+
 fun dpToPx(dp: Float, context: Context): Int {
     return TypedValue.applyDimension(
         TypedValue.COMPLEX_UNIT_DIP,
         dp,
-        context.resources.displayMetrics).toInt()
+        context.resources.displayMetrics
+    ).toInt()
 }

@@ -6,10 +6,11 @@ import android.net.NetworkCapabilities
 import com.example.playlistmaker.search.data.NetworkClient
 import com.example.playlistmaker.search.data.dto.Response
 import com.example.playlistmaker.search.data.dto.TrackSearchRequest
+import com.example.playlistmaker.util.ResourceProvider
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class RetrofitNetworkClient(val context: Context) : NetworkClient {
+class RetrofitNetworkClient : NetworkClient {
 
     private val baseURL = "https://itunes.apple.com"
 
@@ -39,7 +40,7 @@ class RetrofitNetworkClient(val context: Context) : NetworkClient {
     }
 
     private fun isConnected(): Boolean {
-        val connectivityManager = context.getSystemService(
+        val connectivityManager = ResourceProvider.application.getSystemService(
             Context.CONNECTIVITY_SERVICE
         ) as ConnectivityManager
         val capabilities =

@@ -38,6 +38,7 @@ class SearchActivity : AppCompatActivity() {
 
     private var stringEditText = ""
     private val trackList = mutableListOf<Track>()
+    private var clickDebounce = true
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,6 +50,10 @@ class SearchActivity : AppCompatActivity() {
 
         searchViewModel.observeState().observe(this) {
             render(it)
+        }
+
+        searchViewModel.observeClickDebounce().observe(this) {
+            clickDebounce = it
         }
 
         searchAdapter = TrackAdapter { launchPlayerActivity(it) }
@@ -136,16 +141,13 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun launchPlayerActivity(track: Track) {
-        if (clickDebounce()) {
+        if (clickDebounce) {
+            searchViewModel.clickDebounceCheck()
             addTrackToSearchHistory(track)
             val intentPlayerActivity = Intent(this, PlayerActivity::class.java)
             intentPlayerActivity.putExtra(PlayerActivity.TRACK, Gson().toJson(track))
             startActivity(intentPlayerActivity)
         }
-    }
-
-    private fun clickDebounce(): Boolean {
-        return searchViewModel.clickDebounce()
     }
 
     private fun getHistoryTracks(): List<Track> {
@@ -163,7 +165,7 @@ class SearchActivity : AppCompatActivity() {
     private fun render(state: SearchState) {
         when (state) {
             is SearchState.Content -> showContent(state.tracks)
-            is SearchState.Empty -> showEmpty()   //TODO исправить String который сюда приходит
+            is SearchState.Empty -> showEmpty()
             is SearchState.Error -> showError()
             is SearchState.Loading -> showLoading()
         }

@@ -14,6 +14,8 @@ import com.example.playlistmaker.player.ui.model.PlayerState
 import com.example.playlistmaker.player.ui.view_model.PlayerViewModel
 import com.example.playlistmaker.search.domain.model.Track
 import com.example.playlistmaker.search.ui.activity.dpToPx
+import com.example.playlistmaker.util.DateTimeUtil
+import com.example.playlistmaker.util.ResourceProvider
 import com.google.gson.Gson
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -22,7 +24,7 @@ import java.util.Locale
 class PlayerActivity : AppCompatActivity() {
 
     private var mainThreadHandler = Handler(Looper.getMainLooper())
-    private val defaultTimeText = "00:00"
+    private val defaultTimeText = ResourceProvider.getString(R.string.default_track_time)
 
     private lateinit var binding: ActivityPlayerBinding
 
@@ -56,12 +58,11 @@ class PlayerActivity : AppCompatActivity() {
         return object : Runnable {
             override fun run() {
                 if (playerState == PlayerState.STATE_PLAYING) {
-                    binding.tvTrackTimePlay.text = SimpleDateFormat(
-                        "mm:ss",
-                        Locale.getDefault()
-                    ).format(viewModel.getCurrentPosition() + REFRESH_TRACK_TIMER)
+                    binding.tvTrackTimePlay.text =
+                        DateTimeUtil.timeFormat(
+                            (viewModel.getCurrentPosition() + REFRESH_TRACK_TIMER_MILLIS).toInt())
 
-                    mainThreadHandler.postDelayed(this, REFRESH_TRACK_TIMER)
+                    mainThreadHandler.postDelayed(this, REFRESH_TRACK_TIMER_MILLIS)
                 }
             }
         }
@@ -101,7 +102,7 @@ class PlayerActivity : AppCompatActivity() {
         binding.ivPauseButton.visibility = View.INVISIBLE
     }
 
-    private fun onCompletion() {                            // Проверить этот метод
+    private fun onCompletion() {
         binding.ivPlayButton.visibility = View.VISIBLE
         binding.ivPauseButton.visibility = View.INVISIBLE
         removeUpdateTimer()
@@ -122,27 +123,11 @@ class PlayerActivity : AppCompatActivity() {
 
         binding.tvTrackName.text = track.trackName
         binding.tvArtistName.text = track.artistName
-        binding.tvTrackTime.text = timeFormat(track.trackTime.toInt())
+        binding.tvTrackTime.text = DateTimeUtil.timeFormat(track.trackTime.toInt())
         binding.tvAlbumName.text = track.collectionName
-        binding.tvYearName.text = dateFormat(track.releaseDate)
+        binding.tvYearName.text = DateTimeUtil.dateFormat(track.releaseDate)
         binding.tvGenreName.text = track.primaryGenreName
         binding.tvCountryName.text = track.country
-    }
-
-    private fun timeFormat(track: Int): String {
-        return SimpleDateFormat(
-            "mm:ss",
-            Locale.getDefault()
-        ).format(
-            track
-        )
-    }
-
-    private fun dateFormat(date: Date): String {
-        return SimpleDateFormat(
-            "yyyy",
-            Locale.getDefault()
-        ).format(date)
     }
 
     private fun getTrack(): Track {
@@ -163,6 +148,6 @@ class PlayerActivity : AppCompatActivity() {
 
     companion object {
         const val TRACK = "TRACK"
-        private const val REFRESH_TRACK_TIMER = 500L
+        private const val REFRESH_TRACK_TIMER_MILLIS = 500L
     }
 }

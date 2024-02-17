@@ -1,32 +1,40 @@
 package com.example.playlistmaker.search.ui.view_model
 
 import android.app.Application
+import android.content.res.loader.ResourcesProvider
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.search.domain.TracksInteractor
 import com.example.playlistmaker.search.domain.model.Track
 import com.example.playlistmaker.search.ui.model.SearchState
 
-class SearchViewModel(application: Application) : AndroidViewModel(application) {
+class SearchViewModel(
+    private val searchInteractor: TracksInteractor = Creator.provideTracksInteractor()
+) : ViewModel() {
 
-    private val searchInteractor = Creator.provideTracksInteractor(getApplication())
+
     private val handler = Handler(Looper.getMainLooper())
-    private var isClickAllowed = true
 
+    private var isClickAllowed = true
     private var latestSearchText: String? = null
 
     private val stateLiveData = MutableLiveData<SearchState>()
     fun observeState(): LiveData<SearchState> = stateLiveData
 
+    private val clickDebounceLiveData = MutableLiveData<Boolean>()
+    fun observeClickDebounce(): LiveData<Boolean> = clickDebounceLiveData
+
 
     fun saveTrack(track: Track) {
         searchInteractor.saveTrack(track)
     }
+
     fun clearTracks() {
         searchInteractor.clearTracks()
     }
@@ -35,13 +43,13 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
         return searchInteractor.getTracks()
     }
 
-    fun clickDebounce(): Boolean {
+    fun clickDebounceCheck() {
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
-            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY_MILLIS)
         }
-        return current
+        clickDebounceLiveData.postValue(current)
     }
 
     fun searchDebounce(changedText: String) {
@@ -54,13 +62,7 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
 
         val searchRunnable = Runnable { searchRequest(changedText) }
 
-        val postTime = SystemClock.uptimeMillis() + SEARCH_DEBOUNCE_DELAY
-
-        handler.postAtTime(
-            searchRunnable,
-            SEARCH_REQUEST_TOKEN,
-            postTime
-        )
+        handler.postDelayed(searchRunnable, SEARCH_REQUEST_TOKEN, SEARCH_DEBOUNCE_DELAY_MILLIS)
     }
 
     override fun onCleared() {
@@ -105,7 +107,7 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
 
     companion object {
         private val SEARCH_REQUEST_TOKEN = Any()
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
-        private const val CLICK_DEBOUNCE_DELAY = 1000L
+        private const val SEARCH_DEBOUNCE_DELAY_MILLIS = 2000L
+        private const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
     }
 }

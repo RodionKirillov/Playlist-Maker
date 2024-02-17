@@ -4,13 +4,14 @@ import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import com.example.playlistmaker.search.data.MemoryClient
 import com.example.playlistmaker.search.data.dto.TrackDto
+import com.example.playlistmaker.util.ResourceProvider
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
-class SharedPreferencesMemoryClient(context: Context) : MemoryClient {
+class SharedPreferencesMemoryClient : MemoryClient {
 
     private val sharedPrefsHistory =
-        context.getSharedPreferences(SHARED_PREFS_HISTORY, MODE_PRIVATE)
+        ResourceProvider.application.getSharedPreferences(SHARED_PREFS_HISTORY, MODE_PRIVATE)
 
     override fun addSearchHistory(trackArray: List<TrackDto>) {
         sharedPrefsHistory.edit()
@@ -37,7 +38,7 @@ class SharedPreferencesMemoryClient(context: Context) : MemoryClient {
         return Gson().fromJson(json, type)
     }
 
-    companion object{
+    companion object {
         const val SHARED_PREFS_HISTORY_KEY = "SHARED_PREFS_HISTORY_KEY"
         const val SHARED_PREFS_HISTORY = "SHARED_PREFS_HISTORY"
     }

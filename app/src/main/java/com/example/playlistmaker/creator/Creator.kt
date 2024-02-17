@@ -23,35 +23,35 @@ import com.example.playlistmaker.sharing.domain.impl.SharingInteractorImpl
 
 
 object Creator {
-    private fun getTracksRepository(context: Context): TrackRepository {
-        return TrackRepositoryImpl(RetrofitNetworkClient(context), SharedPreferencesMemoryClient(context))
+    private fun getTracksRepository(): TrackRepository {
+        return TrackRepositoryImpl(RetrofitNetworkClient(), SharedPreferencesMemoryClient())
     }
 
     private fun getPlayerRepository(): PlayerRepository {
         return PlayerRepositoryImpl()
     }
 
-    private fun getExternalNavigator(context: Context): ExternalNavigator {
-        return ExternalNavigatorImpl(context)
+    private fun getExternalNavigator(): ExternalNavigator {
+        return ExternalNavigatorImpl()
     }
 
-    private fun getSettingsRepository(context: Context): SettingsRepository {
-        return SettingsRepositoryImpl(SharedPreferencesThemeMemory(context))
+    private fun getSettingsRepository(): SettingsRepository {
+        return SettingsRepositoryImpl(SharedPreferencesThemeMemory())
     }
 
-    fun provideTracksInteractor(context: Context): TracksInteractor {
-        return TracksInteractorImpl(getTracksRepository(context))
+    fun provideTracksInteractor(): TracksInteractor {
+        return TracksInteractorImpl(getTracksRepository())
     }
 
     fun providePlayerInteractor(): PlayerInteractor {
         return PlayerInteractorImpl(getPlayerRepository())
     }
 
-    fun provideSharingInteractor(context: Context): SharingInteractor {
-        return SharingInteractorImpl(getExternalNavigator(context))
+    fun provideSharingInteractor(): SharingInteractor {
+        return SharingInteractorImpl(getExternalNavigator())
     }
 
-    fun provideSettingsInteractor(context: Context): SettingsInteractor {
-        return SettingsInteractorImpl(getSettingsRepository(context))
+    fun provideSettingsInteractor(): SettingsInteractor {
+        return SettingsInteractorImpl(getSettingsRepository())
     }
 }
