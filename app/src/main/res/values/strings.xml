@@ -10,10 +10,7 @@
     <string name="user_agreement">Пользовательское соглашение</string>
     <string name="search_toolbar">Поиск</string>
     <string name="search_hint">Поиск</string>
-    <string name="practicum_yandex_android_developer">https://practicum.yandex.ru/android-developer/?from=catalog</string>
     <string name="support_message">Спасибо разработчикам и разработчицам за крутое приложение!</string>
-    <string name="my_email">rodion.44454@gmail.com</string>
-    <string name="yandex_practicum_offer">https://yandex.ru/legal/practicum_offer/</string>
     <string name="subject_message">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
     <string name="refresh_search">Обновить</string>
     <string name="internet_error2">Загрузка не удалась. Проверьте подключение к интернету</string>
@@ -26,5 +23,5 @@
     <string name="year">Год</string>
     <string name="genre">Жанр</string>
     <string name="country">Страна</string>
-    <string name="default_track_time">0:00</string>
+    <string name="default_track_time">00:00</string>
 </resources>
