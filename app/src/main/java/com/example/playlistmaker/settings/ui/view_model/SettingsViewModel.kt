@@ -16,8 +16,8 @@ import com.example.playlistmaker.util.App
 import com.example.playlistmaker.util.ResourceProvider
 
 class SettingsViewModel(
-    private val sharingInteractor: SharingInteractor = Creator.provideSharingInteractor(),
-    private val settingsInteractor: SettingsInteractor = Creator.provideSettingsInteractor()
+    private val sharingInteractor: SharingInteractor,
+    private val settingsInteractor: SettingsInteractor
 ) : ViewModel() {
 
     private val themeSettings = MutableLiveData<ThemeSettings>()

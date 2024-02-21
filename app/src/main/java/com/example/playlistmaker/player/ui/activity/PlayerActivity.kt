@@ -17,19 +17,23 @@ import com.example.playlistmaker.search.ui.activity.dpToPx
 import com.example.playlistmaker.util.DateTimeUtil
 import com.example.playlistmaker.util.ResourceProvider
 import com.google.gson.Gson
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
 class PlayerActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityPlayerBinding
+    private lateinit var playerState: PlayerState
+    private lateinit var  track: Track
+
+    private val viewModel: PlayerViewModel by viewModel() {
+        parametersOf(track)
+    }
     private var mainThreadHandler = Handler(Looper.getMainLooper())
     private val defaultTimeText = ResourceProvider.getString(R.string.default_track_time)
-
-    private lateinit var binding: ActivityPlayerBinding
-
-    private lateinit var viewModel: PlayerViewModel
-    private lateinit var playerState: PlayerState
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,12 +43,8 @@ class PlayerActivity : AppCompatActivity() {
 
         binding.backButtonPlayerActivity.setOnClickListener { finish() }
 
-        val track = getTrack()
+        track = getTrack()
         initTrackInfo(track)
-        viewModel = ViewModelProvider(
-            this,
-            PlayerViewModel.factory(track)
-        )[PlayerViewModel::class.java]
 
         viewModel.preparePlaying(::onCompletion)
         viewModel.getState.observe(this) { state ->

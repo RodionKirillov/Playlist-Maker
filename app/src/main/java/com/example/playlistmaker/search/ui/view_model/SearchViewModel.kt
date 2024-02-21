@@ -15,12 +15,10 @@ import com.example.playlistmaker.search.domain.model.Track
 import com.example.playlistmaker.search.ui.model.SearchState
 
 class SearchViewModel(
-    private val searchInteractor: TracksInteractor = Creator.provideTracksInteractor()
+    private val searchInteractor: TracksInteractor
 ) : ViewModel() {
 
-
     private val handler = Handler(Looper.getMainLooper())
-
     private var isClickAllowed = true
     private var latestSearchText: String? = null
 

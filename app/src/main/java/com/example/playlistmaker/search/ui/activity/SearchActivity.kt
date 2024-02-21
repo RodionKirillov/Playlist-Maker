@@ -28,14 +28,15 @@ import com.example.playlistmaker.search.domain.TracksInteractor
 import com.example.playlistmaker.search.ui.model.SearchState
 import com.example.playlistmaker.search.ui.view_model.SearchViewModel
 import com.google.gson.Gson
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
 
-    private lateinit var searchViewModel: SearchViewModel
     private lateinit var binding: ActivitySearchBinding
     private lateinit var searchAdapter: TrackAdapter
     private lateinit var historyAdapter: TrackAdapter
 
+    private val searchViewModel: SearchViewModel by viewModel()
     private var stringEditText = ""
     private val trackList = mutableListOf<Track>()
     private var clickDebounce = true
@@ -46,7 +47,6 @@ class SearchActivity : AppCompatActivity() {
         setContentView(R.layout.activity_search)
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        searchViewModel = ViewModelProvider(this)[SearchViewModel::class.java]
 
         searchViewModel.observeState().observe(this) {
             render(it)

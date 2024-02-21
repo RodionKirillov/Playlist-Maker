@@ -40,6 +40,8 @@ android {
 }
 
 dependencies {
+    //KOIN
+    implementation ("io.insert-koin:koin-android:3.3.0")
     //MVVM
     implementation ("androidx.core:core-ktx:1.12.0")
     //GSON

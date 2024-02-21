@@ -4,9 +4,9 @@ import android.media.MediaPlayer
 import com.example.playlistmaker.player.data.PlayerRepository
 import com.example.playlistmaker.search.domain.model.Track
 
-class PlayerRepositoryImpl() : PlayerRepository {
-
-    private var mediaPlayer = MediaPlayer()
+class PlayerRepositoryImpl(
+    private val mediaPlayer: MediaPlayer
+) : PlayerRepository {
 
     override fun preparePlaying(
         track: Track,
