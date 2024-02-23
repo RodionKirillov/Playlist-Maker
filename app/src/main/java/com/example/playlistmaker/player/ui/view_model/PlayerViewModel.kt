@@ -3,10 +3,6 @@ package com.example.playlistmaker.player.ui.view_model
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.player.ui.model.PlayerState
 import com.example.playlistmaker.player.data.impl.PlayerRepositoryImpl
 import com.example.playlistmaker.player.domain.PlayerInteractor

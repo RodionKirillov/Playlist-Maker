@@ -27,7 +27,7 @@ class PlayerActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPlayerBinding
     private lateinit var playerState: PlayerState
-    private lateinit var  track: Track
+    private lateinit var track: Track
 
     private val viewModel: PlayerViewModel by viewModel() {
         parametersOf(track)
@@ -60,7 +60,8 @@ class PlayerActivity : AppCompatActivity() {
                 if (playerState == PlayerState.STATE_PLAYING) {
                     binding.tvTrackTimePlay.text =
                         DateTimeUtil.timeFormat(
-                            (viewModel.getCurrentPosition() + REFRESH_TRACK_TIMER_MILLIS).toInt())
+                            (viewModel.getCurrentPosition() + REFRESH_TRACK_TIMER_MILLIS).toInt()
+                        )
 
                     mainThreadHandler.postDelayed(this, REFRESH_TRACK_TIMER_MILLIS)
                 }
