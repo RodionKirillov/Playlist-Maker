@@ -1,11 +1,10 @@
 package com.example.playlistmaker.player.ui.activity
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
-import androidx.lifecycle.ViewModelProvider
+import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
@@ -19,9 +18,6 @@ import com.example.playlistmaker.util.ResourceProvider
 import com.google.gson.Gson
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 class PlayerActivity : AppCompatActivity() {
 
@@ -50,7 +46,11 @@ class PlayerActivity : AppCompatActivity() {
         viewModel.getState.observe(this) { state ->
             playerState = state
         }
-        binding.ivPlayButton.setOnClickListener { playbackControl(playerState) }
+        binding.ivPlayButton.setOnClickListener {
+            if (playerState == PlayerState.STATE_PREPARED || playerState == PlayerState.STATE_PAUSED) {
+                playbackControl(playerState)
+            }
+        }
         binding.ivPauseButton.setOnClickListener { playbackControl(playerState) }
     }
 
@@ -84,7 +84,7 @@ class PlayerActivity : AppCompatActivity() {
                 removeUpdateTimer()
             }
 
-            PlayerState.STATE_PREPARED, PlayerState.STATE_PAUSED -> {
+            PlayerState.STATE_PREPARED, PlayerState.STATE_PAUSED, PlayerState.STATE_DEFAULT -> {
                 startPlayer()
                 startUpdateTimer()
             }
