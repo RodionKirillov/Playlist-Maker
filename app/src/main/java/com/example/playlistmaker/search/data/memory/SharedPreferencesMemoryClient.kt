@@ -1,17 +1,14 @@
 package com.example.playlistmaker.search.data.memory
 
-import android.content.Context
-import android.content.Context.MODE_PRIVATE
+import android.content.SharedPreferences
 import com.example.playlistmaker.search.data.MemoryClient
 import com.example.playlistmaker.search.data.dto.TrackDto
-import com.example.playlistmaker.util.ResourceProvider
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
-class SharedPreferencesMemoryClient : MemoryClient {
-
-    private val sharedPrefsHistory =
-        ResourceProvider.application.getSharedPreferences(SHARED_PREFS_HISTORY, MODE_PRIVATE)
+class SharedPreferencesMemoryClient(
+    private val sharedPrefsHistory: SharedPreferences
+) : MemoryClient {
 
     override fun addSearchHistory(trackArray: List<TrackDto>) {
         sharedPrefsHistory.edit()

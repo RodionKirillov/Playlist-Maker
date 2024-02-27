@@ -5,7 +5,9 @@ import com.example.playlistmaker.player.domain.PlayerInteractor
 import com.example.playlistmaker.player.data.PlayerRepository
 import com.example.playlistmaker.search.domain.model.Track
 
-class PlayerInteractorImpl(private val playerRepository: PlayerRepository) : PlayerInteractor {
+class PlayerInteractorImpl(
+    private val playerRepository: PlayerRepository
+) : PlayerInteractor {
 
     override fun preparePlaying(
         track: Track,

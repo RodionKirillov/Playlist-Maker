@@ -4,38 +4,26 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.ProgressBar
-import android.widget.ScrollView
-import android.widget.Toolbar
-import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.player.ui.activity.PlayerActivity
 import com.example.playlistmaker.R
 import com.example.playlistmaker.search.domain.model.Track
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.databinding.ActivitySearchBinding
-import com.example.playlistmaker.search.domain.TracksInteractor
 import com.example.playlistmaker.search.ui.model.SearchState
 import com.example.playlistmaker.search.ui.view_model.SearchViewModel
 import com.google.gson.Gson
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
 
-    private lateinit var searchViewModel: SearchViewModel
     private lateinit var binding: ActivitySearchBinding
     private lateinit var searchAdapter: TrackAdapter
     private lateinit var historyAdapter: TrackAdapter
 
+    private val searchViewModel: SearchViewModel by viewModel()
     private var stringEditText = ""
     private val trackList = mutableListOf<Track>()
     private var clickDebounce = true
@@ -46,7 +34,6 @@ class SearchActivity : AppCompatActivity() {
         setContentView(R.layout.activity_search)
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        searchViewModel = ViewModelProvider(this)[SearchViewModel::class.java]
 
         searchViewModel.observeState().observe(this) {
             render(it)

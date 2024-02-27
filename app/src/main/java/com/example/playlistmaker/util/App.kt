@@ -3,8 +3,14 @@ package com.example.playlistmaker.util
 import android.app.Application
 import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
+import com.example.playlistmaker.di.playerModule
+import com.example.playlistmaker.di.searchModule
+import com.example.playlistmaker.di.settingsModule
+import com.example.playlistmaker.di.sharingModule
 import com.example.playlistmaker.settings.data.memory.SharedPreferencesThemeMemory.Companion.SHARED_PREFS_THEME
 import com.example.playlistmaker.settings.data.memory.SharedPreferencesThemeMemory.Companion.SHARED_PREFS_THEME_KEY
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
 
 class App : Application() {
 
@@ -12,6 +18,11 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        startKoin {
+            androidContext(this@App)
+            modules(settingsModule, sharingModule, searchModule, playerModule)
+        }
+
         ResourceProvider.initResourceProvider(this)
 
         val isDarkThemeEnabled =
