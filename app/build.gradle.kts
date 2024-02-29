@@ -40,6 +40,12 @@ android {
 }
 
 dependencies {
+    //Fragment
+    implementation ("androidx.fragment:fragment-ktx:1.6.2")
+    //ViewPager2
+    implementation ("androidx.viewpager2:viewpager2:1.0.0")
+    //Material Design
+    implementation ("com.google.android.material:material:1.11.0")
     //KOIN
     implementation ("io.insert-koin:koin-android:3.3.0")
     //MVVM

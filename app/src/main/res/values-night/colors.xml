@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="errors_image_color">#FFFFFFFF</color>
+
+    <color name="theme_color">#1A1B22</color>
+    <color name="theme_color_night">#FFFFFFFF</color>
 </resources>

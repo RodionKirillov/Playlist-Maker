@@ -109,7 +109,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
 
-    override fun onSaveInstanceState(outState: Bundle) {
+    override fun onSaveInstanceState(outState: Bundle) { //Fragment созраняет своё состояние
         super.onSaveInstanceState(outState)
         outState.putString(STRING_EDIT_TEXT, stringEditText)
     }

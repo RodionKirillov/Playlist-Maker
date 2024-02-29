@@ -24,4 +24,8 @@
     <string name="genre">Жанр</string>
     <string name="country">Страна</string>
     <string name="default_track_time">00:00</string>
+    <string name="new_playlist_button">Новый плейлист</string>
+    <string name="playlist_not_found">Вы не создали\n ни одного плейлиста</string>
+    <string name="favorite_tracks_not_found">Ваша медиатека пуста</string>
+    <string name="media_menu">Медиатека</string>
 </resources>

@@ -3,6 +3,7 @@ package com.example.playlistmaker.util
 import android.app.Application
 import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
+import com.example.playlistmaker.di.mediaModule
 import com.example.playlistmaker.di.playerModule
 import com.example.playlistmaker.di.searchModule
 import com.example.playlistmaker.di.settingsModule
@@ -20,7 +21,7 @@ class App : Application() {
         super.onCreate()
         startKoin {
             androidContext(this@App)
-            modules(settingsModule, sharingModule, searchModule, playerModule)
+            modules(settingsModule, sharingModule, searchModule, playerModule, mediaModule)
         }
 
         ResourceProvider.initResourceProvider(this)
