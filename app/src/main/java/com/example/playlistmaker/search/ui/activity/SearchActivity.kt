@@ -44,27 +44,27 @@ class SearchActivity : AppCompatActivity() {
         }
 
         searchAdapter = TrackAdapter { launchPlayerActivity(it) }
-        binding.recyclerviewSearchTrack.adapter = searchAdapter
+        binding.rvSearchTrack.adapter = searchAdapter
 
         historyAdapter = TrackAdapter { launchPlayerActivity(it) }
-        binding.recyclerviewHistoryTrack.adapter = historyAdapter
+        binding.rvHistoryTrack.adapter = historyAdapter
         historyAdapter.setItems(getHistoryTracks())
 
-        binding.cleanHistoryButton.setOnClickListener {
+        binding.bCleanHistory.setOnClickListener {
             clearHistoryButtonClicked()
         }
 
-        binding.editTextSearch.setOnFocusChangeListener { _, hasFocus ->
-            binding.historyTrack.visibility =
-                if (hasFocus && binding.editTextSearch.text.isNullOrEmpty() && getHistoryTracks().size > 0) {
+        binding.etSearch.setOnFocusChangeListener { _, hasFocus ->
+            binding.svHistoryTrack.visibility =
+                if (hasFocus && binding.etSearch.text.isNullOrEmpty() && getHistoryTracks().size > 0) {
                     View.VISIBLE
                 } else {
                     View.GONE
                 }
         }
 
-        binding.clearIcon.setOnClickListener {
-            binding.editTextSearch.setText("")
+        binding.ivClearIcon.setOnClickListener {
+            binding.etSearch.setText("")
             trackList.clear()
             searchAdapter.notifyDataSetChanged()
 
@@ -81,9 +81,9 @@ class SearchActivity : AppCompatActivity() {
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 stringEditText = p0.toString()
-                binding.clearIcon.visibility = clearButtonVisibility(p0)
-                binding.historyTrack.visibility =
-                    if (binding.editTextSearch.hasFocus() && p0?.isEmpty() == true) View.VISIBLE else View.GONE
+                binding.ivClearIcon.visibility = clearButtonVisibility(p0)
+                binding.svHistoryTrack.visibility =
+                    if (binding.etSearch.hasFocus() && p0?.isEmpty() == true) View.VISIBLE else View.GONE
 
                 searchViewModel.searchDebounce(p0.toString())
             }
@@ -92,18 +92,18 @@ class SearchActivity : AppCompatActivity() {
 
             }
         }
-        binding.editTextSearch.addTextChangedListener(searchTextWatcher)
+        binding.etSearch.addTextChangedListener(searchTextWatcher)
 
 
-        binding.refreshButton.setOnClickListener {
+        binding.bRefresh.setOnClickListener {
             searchViewModel.searchDebounce(stringEditText)   //TODO другой аргумент
         }
 
         if (savedInstanceState != null) {
-            binding.editTextSearch.setText(savedInstanceState.getString(STRING_EDIT_TEXT))
+            binding.etSearch.setText(savedInstanceState.getString(STRING_EDIT_TEXT))
         }
 
-        binding.backButton.setOnClickListener {
+        binding.backButton.setNavigationOnClickListener {
             finish()
         }
     }
@@ -115,11 +115,11 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun clearHistoryButtonClicked() {
-        binding.historyTrack.visibility = View.GONE
+        binding.svHistoryTrack.visibility = View.GONE
 
         searchViewModel.clearTracks()
 
-        binding.recyclerviewHistoryTrack.adapter?.notifyDataSetChanged()
+        binding.rvHistoryTrack.adapter?.notifyDataSetChanged()
     }
 
     private fun addTrackToSearchHistory(track: Track) {
@@ -159,31 +159,31 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun showLoading() {
-        binding.recyclerviewSearchTrack.visibility = View.GONE
-        binding.trackNotFound.visibility = View.GONE
-        binding.internetError.visibility = View.GONE
-        binding.progressBar.visibility = View.VISIBLE
+        binding.rvSearchTrack.visibility = View.GONE
+        binding.llTrackNotFound.visibility = View.GONE
+        binding.llInternetError.visibility = View.GONE
+        binding.pbLoading.visibility = View.VISIBLE
     }
 
     private fun showError() {
-        binding.recyclerviewSearchTrack.visibility = View.GONE
-        binding.trackNotFound.visibility = View.GONE
-        binding.internetError.visibility = View.VISIBLE
-        binding.progressBar.visibility = View.GONE
+        binding.rvSearchTrack.visibility = View.GONE
+        binding.llTrackNotFound.visibility = View.GONE
+        binding.llInternetError.visibility = View.VISIBLE
+        binding.pbLoading.visibility = View.GONE
     }
 
     private fun showEmpty() {
-        binding.recyclerviewSearchTrack.visibility = View.GONE
-        binding.trackNotFound.visibility = View.VISIBLE
-        binding.internetError.visibility = View.GONE
-        binding.progressBar.visibility = View.GONE
+        binding.rvSearchTrack.visibility = View.GONE
+        binding.llTrackNotFound.visibility = View.VISIBLE
+        binding.llInternetError.visibility = View.GONE
+        binding.pbLoading.visibility = View.GONE
     }
 
     private fun showContent(tracks: List<Track>) {
-        binding.recyclerviewSearchTrack.visibility = View.VISIBLE
-        binding.trackNotFound.visibility = View.GONE
-        binding.internetError.visibility = View.GONE
-        binding.progressBar.visibility = View.GONE
+        binding.rvSearchTrack.visibility = View.VISIBLE
+        binding.llTrackNotFound.visibility = View.GONE
+        binding.llInternetError.visibility = View.GONE
+        binding.pbLoading.visibility = View.GONE
 
         trackList.clear()
         trackList.addAll(tracks)

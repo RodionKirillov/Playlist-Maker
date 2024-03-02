@@ -6,12 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".player.ui.activity.PlayerActivity">
 
-    <Toolbar
+    <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/backButtonPlayerActivity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:navigationIcon="@drawable/back_icon"
-        app:layout_constraintBottom_toTopOf="@id/trackImage"
+        app:navigationIcon="@drawable/back_icon"
+        app:layout_constraintBottom_toTopOf="@id/ivTrackImage"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -31,7 +31,7 @@
         app:layout_constraintGuide_end="24dp" />
 
     <ImageView
-        android:id="@+id/trackImage"
+        android:id="@+id/ivTrackImage"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:contentDescription="@null"
@@ -56,7 +56,7 @@
         app:layout_constraintBottom_toTopOf="@id/tvArtistName"
         app:layout_constraintEnd_toStartOf="@+id/rightBorder"
         app:layout_constraintStart_toEndOf="@id/leftBorder"
-        app:layout_constraintTop_toBottomOf="@id/trackImage"
+        app:layout_constraintTop_toBottomOf="@id/ivTrackImage"
         tools:text="Yesterday (Remastered 2009)" />
 
     <TextView

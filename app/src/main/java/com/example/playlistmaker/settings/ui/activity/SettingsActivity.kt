@@ -28,7 +28,7 @@ class SettingsActivity : AppCompatActivity() {
             viewModel.setTheme(checked)
         }
 
-        binding.backButton.setOnClickListener {
+        binding.bBack.setNavigationOnClickListener {
             finish()
         }
 
