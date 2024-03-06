@@ -37,7 +37,7 @@ class PlayerActivity : AppCompatActivity() {
         binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.backButtonPlayerActivity.setOnClickListener { finish() }
+        binding.backButtonPlayerActivity.setNavigationOnClickListener { finish() }
 
         track = getTrack()
         initTrackInfo(track)
@@ -120,7 +120,7 @@ class PlayerActivity : AppCompatActivity() {
             .placeholder(R.drawable.placeholder_icon)
             .centerCrop()
             .transform(RoundedCorners(dpToPx(8f, this)))
-            .into(binding.trackImage)
+            .into(binding.ivTrackImage)
 
         binding.tvTrackName.text = track.trackName
         binding.tvArtistName.text = track.artistName

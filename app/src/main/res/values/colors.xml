@@ -34,6 +34,9 @@
 
     <color name="errors_image_color">#1A1B22</color>
 
+    <color name="theme_color">#FFFFFFFF</color>
+    <color name="theme_color_night">#1A1B22</color>
+
 
 
 </resources>

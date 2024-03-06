@@ -8,12 +8,12 @@
     android:orientation="vertical"
     tools:context=".settings.ui.activity.SettingsActivity">
 
-    <Toolbar
-        android:id="@+id/back_button"
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/bBack"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:navigationIcon="@drawable/back_icon"
-        android:title="@string/settings" />
+        app:title="@string/settings"
+        app:navigationIcon="@drawable/back_icon" />
 
 
     <FrameLayout
@@ -38,7 +38,7 @@
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/share_button"
+        android:id="@+id/shareButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -58,7 +58,7 @@
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/support_button"
+        android:id="@+id/supportButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -78,7 +78,7 @@
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/arrow_button"
+        android:id="@+id/arrowButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
