@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/main_background_button_color"
     android:orientation="vertical"
-    tools:context=".media.ui.MediaActivity">
+    tools:context=".media.ui.activity.MediaActivity">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/backButton"

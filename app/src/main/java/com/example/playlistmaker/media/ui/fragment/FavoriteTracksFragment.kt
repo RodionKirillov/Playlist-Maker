@@ -1,4 +1,4 @@
-package com.example.playlistmaker.media.ui.fragment
+package com.example.playlistmaker.media.ui.fragment 
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,7 +11,9 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FavoriteTracksFragment : Fragment() {
 
-    private lateinit var binding: FragmentFavoriteTracksBinding
+    private var _binding: FragmentFavoriteTracksBinding? = null
+
+    private val binding get() = _binding!!
 
     private val viewModel: FavoriteTracksViewModel by viewModel()
 
@@ -20,7 +22,7 @@ class FavoriteTracksFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentFavoriteTracksBinding.inflate(layoutInflater, container, false)
+        _binding = FragmentFavoriteTracksBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 

@@ -12,7 +12,9 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlaylistsFragment : Fragment() {
 
-    private lateinit var binding: FragmentPlaylistsBinding
+    private var _binding: FragmentPlaylistsBinding? = null
+
+    private val binding get() = _binding!!
 
     private val viewModel: PlaylistsViewModel by viewModel()
 
@@ -21,7 +23,7 @@ class PlaylistsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentPlaylistsBinding.inflate(layoutInflater, container, false)
+        _binding = FragmentPlaylistsBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
