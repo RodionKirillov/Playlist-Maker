@@ -40,6 +40,10 @@ android {
 }
 
 dependencies {
+    //Jetpack Navigation Component
+    implementation ("androidx.navigation:navigation-fragment-ktx:2.7.7")
+    implementation ("androidx.navigation:navigation-ui-ktx:2.7.7")
+    implementation ("androidx.fragment:fragment-ktx:1.6.2")
     //Fragment
     implementation ("androidx.fragment:fragment-ktx:1.6.2")
     //ViewPager2
@@ -58,6 +62,7 @@ dependencies {
     // Glide
     implementation("com.google.android.material:material:1.11.0")
     implementation("com.github.bumptech.glide:glide:4.16.0")
+    implementation("androidx.activity:activity:1.8.2")
     annotationProcessor("com.github.bumptech.glide:compiler:4.14.2")
 
     implementation("androidx.core:core-ktx:1.12.0")

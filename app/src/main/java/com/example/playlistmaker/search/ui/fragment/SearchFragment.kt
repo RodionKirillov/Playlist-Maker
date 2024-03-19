@@ -1,25 +1,25 @@
-package com.example.playlistmaker.search.ui.activity
+package com.example.playlistmaker.search.ui.fragment
 
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import androidx.fragment.app.Fragment
+import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.player.ui.activity.PlayerActivity
-import com.example.playlistmaker.R
 import com.example.playlistmaker.search.domain.model.Track
-import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.search.ui.model.SearchState
 import com.example.playlistmaker.search.ui.view_model.SearchViewModel
 import com.google.gson.Gson
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchActivity : AppCompatActivity() {
+class SearchFragment : Fragment() {
 
-    private lateinit var binding: ActivitySearchBinding
     private lateinit var searchAdapter: TrackAdapter
     private lateinit var historyAdapter: TrackAdapter
 
@@ -28,18 +28,25 @@ class SearchActivity : AppCompatActivity() {
     private val trackList = mutableListOf<Track>()
     private var clickDebounce = true
 
+    private var _binding: FragmentSearchBinding? = null
+    private val binding get() = _binding!!
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentSearchBinding.inflate(layoutInflater)
+        return binding.root
+    }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_search)
-        binding = ActivitySearchBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        searchViewModel.observeState().observe(this) {
+        searchViewModel.observeState().observe(viewLifecycleOwner) {
             render(it)
         }
 
-        searchViewModel.observeClickDebounce().observe(this) {
+        searchViewModel.observeClickDebounce().observe(viewLifecycleOwner) {
             clickDebounce = it
         }
 
@@ -69,8 +76,8 @@ class SearchActivity : AppCompatActivity() {
             searchAdapter.notifyDataSetChanged()
 
             val inputMethodManager =
-                getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-            inputMethodManager?.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
+                requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            inputMethodManager?.hideSoftInputFromWindow(requireView().windowToken, 0)
         }
 
 
@@ -96,20 +103,16 @@ class SearchActivity : AppCompatActivity() {
 
 
         binding.bRefresh.setOnClickListener {
-            searchViewModel.searchDebounce(stringEditText)   //TODO другой аргумент
+            searchViewModel.searchDebounce(stringEditText)
         }
 
         if (savedInstanceState != null) {
             binding.etSearch.setText(savedInstanceState.getString(STRING_EDIT_TEXT))
         }
-
-        binding.backButton.setNavigationOnClickListener {
-            finish()
-        }
     }
 
 
-    override fun onSaveInstanceState(outState: Bundle) { //Fragment созраняет своё состояние
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(STRING_EDIT_TEXT, stringEditText)
     }
@@ -131,7 +134,7 @@ class SearchActivity : AppCompatActivity() {
         if (clickDebounce) {
             searchViewModel.clickDebounceCheck()
             addTrackToSearchHistory(track)
-            val intentPlayerActivity = Intent(this, PlayerActivity::class.java)
+            val intentPlayerActivity = Intent(requireContext(), PlayerActivity::class.java)
             intentPlayerActivity.putExtra(PlayerActivity.TRACK, Gson().toJson(track))
             startActivity(intentPlayerActivity)
         }

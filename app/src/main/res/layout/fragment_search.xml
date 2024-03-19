@@ -4,15 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/theme_color"
     android:orientation="vertical"
-    tools:context=".search.ui.activity.SearchActivity">
+    tools:context=".search.ui.fragment.SearchFragment">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/backButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:title="@string/search_toolbar"
-        app:navigationIcon="@drawable/back_icon" />
+        style="@style/CustomToolbarStyle"
+        app:title="@string/search_toolbar" />
 
     <LinearLayout
         android:layout_width="match_parent"

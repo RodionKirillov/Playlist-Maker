@@ -12,7 +12,7 @@ import com.example.playlistmaker.databinding.ActivityPlayerBinding
 import com.example.playlistmaker.player.ui.model.PlayerState
 import com.example.playlistmaker.player.ui.view_model.PlayerViewModel
 import com.example.playlistmaker.search.domain.model.Track
-import com.example.playlistmaker.search.ui.activity.dpToPx
+import com.example.playlistmaker.search.ui.fragment.dpToPx
 import com.example.playlistmaker.util.DateTimeUtil
 import com.example.playlistmaker.util.ResourceProvider
 import com.google.gson.Gson
