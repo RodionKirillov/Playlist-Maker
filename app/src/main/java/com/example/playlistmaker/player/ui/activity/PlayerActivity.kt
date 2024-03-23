@@ -126,7 +126,7 @@ class PlayerActivity : AppCompatActivity() {
         binding.tvArtistName.text = track.artistName
         binding.tvTrackTime.text = DateTimeUtil.timeFormat(track.trackTime.toInt())
         binding.tvAlbumName.text = track.collectionName
-        binding.tvYearName.text = DateTimeUtil.dateFormat(track.releaseDate)
+        binding.tvYearName.text = DateTimeUtil.dateFormat(track.releaseDate!!)
         binding.tvGenreName.text = track.primaryGenreName
         binding.tvCountryName.text = track.country
     }

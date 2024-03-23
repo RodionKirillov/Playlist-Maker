@@ -74,6 +74,7 @@ class SearchFragment : Fragment() {
             binding.etSearch.setText("")
             trackList.clear()
             searchAdapter.notifyDataSetChanged()
+            searchViewModel.showHistory()
 
             val inputMethodManager =
                 requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
@@ -103,7 +104,7 @@ class SearchFragment : Fragment() {
 
 
         binding.bRefresh.setOnClickListener {
-            searchViewModel.searchDebounce(stringEditText)
+            searchViewModel.searchRequest(stringEditText)
         }
 
         if (savedInstanceState != null) {
@@ -158,7 +159,17 @@ class SearchFragment : Fragment() {
             is SearchState.Empty -> showEmpty()
             is SearchState.Error -> showError()
             is SearchState.Loading -> showLoading()
+            is SearchState.ShowHistory -> showHistory()
         }
+    }
+
+    private fun showHistory() {
+        binding.rvSearchTrack.visibility = View.GONE
+        binding.llTrackNotFound.visibility = View.GONE
+        binding.llInternetError.visibility = View.GONE
+        binding.pbLoading.visibility = View.GONE
+
+        binding.svHistoryTrack.visibility = View.VISIBLE
     }
 
     private fun showLoading() {
@@ -191,6 +202,11 @@ class SearchFragment : Fragment() {
         trackList.clear()
         trackList.addAll(tracks)
         searchAdapter.setItems(trackList)
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
     }
 
     companion object {

@@ -2,10 +2,10 @@ package com.example.playlistmaker.search.data.impl
 
 import com.example.playlistmaker.search.data.MemoryClient
 import com.example.playlistmaker.search.data.NetworkClient
+import com.example.playlistmaker.search.data.TrackRepository
 import com.example.playlistmaker.search.data.dto.TrackDto
 import com.example.playlistmaker.search.data.dto.TrackResponse
 import com.example.playlistmaker.search.data.dto.TrackSearchRequest
-import com.example.playlistmaker.search.data.TrackRepository
 import com.example.playlistmaker.search.domain.model.Track
 import com.example.playlistmaker.util.Resource
 
@@ -19,7 +19,7 @@ class TrackRepositoryImpl(
         val response = networkClient.doRequest(TrackSearchRequest(expression))
         return when (response.resultCode) {
 
-            0 -> {
+            -1 -> {
                 Resource.Error("Проверьте подключение к интернету")
             }
 
@@ -79,10 +79,10 @@ class TrackRepositoryImpl(
                 it.artworkUrl100,
                 it.trackId,
                 it.collectionName,
-                it.releaseDate,
+                it.releaseDate!!,
                 it.primaryGenreName,
                 it.country,
-                it.previewUrl
+                it.previewUrl!!
             )
         }
     }

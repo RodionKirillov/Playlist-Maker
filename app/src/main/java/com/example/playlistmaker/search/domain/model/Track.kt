@@ -10,8 +10,8 @@ data class Track(
     val artworkUrl100: String,
     val trackId: String,
     val collectionName: String,
-    val releaseDate: Date,
+    val releaseDate: Date?,
     val primaryGenreName: String,
     val country: String,
-    val previewUrl: String
+    val previewUrl: String? = "Неизвестен"
 )

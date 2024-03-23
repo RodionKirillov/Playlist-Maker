@@ -23,6 +23,9 @@ class SearchViewModel(
     private val clickDebounceLiveData = MutableLiveData<Boolean>()
     fun observeClickDebounce(): LiveData<Boolean> = clickDebounceLiveData
 
+    fun showHistory() {
+        renderState(SearchState.ShowHistory)
+    }
 
     fun saveTrack(track: Track) {
         searchInteractor.saveTrack(track)
@@ -67,7 +70,7 @@ class SearchViewModel(
         stateLiveData.postValue(state)
     }
 
-    private fun searchRequest(newSearchText: String) {
+    fun searchRequest(newSearchText: String) {
         if (newSearchText.isNotEmpty()) {
             renderState(SearchState.Loading)
 
@@ -81,12 +84,12 @@ class SearchViewModel(
                         }
 
                         when {
-                            tracks.isEmpty() -> {
-                                renderState(SearchState.Empty)
-                            }
-
                             errorMessage != null -> {
                                 renderState(SearchState.Error)
+                            }
+
+                            tracks.isEmpty() -> {
+                                renderState(SearchState.Empty)
                             }
 
                             else -> {

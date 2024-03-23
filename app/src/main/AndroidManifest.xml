@@ -29,15 +29,6 @@
         <activity
             android:name=".player.ui.activity.PlayerActivity"
             android:exported="false" />
-        <activity
-            android:name=".media.ui.fragment.MediaFragment"
-            android:exported="false" />
-        <activity
-            android:name=".search.ui.fragment.SearchFragment"
-            android:exported="false" />
-        <activity
-            android:name=".settings.ui.fragment.SettingsFragment"
-            android:exported="false" />
     </application>
 
 </manifest>

@@ -14,4 +14,6 @@ sealed interface SearchState {
 
     object Empty : SearchState
 
+    object ShowHistory: SearchState
+
 }
