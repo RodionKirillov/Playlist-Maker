@@ -24,10 +24,11 @@ class SearchFragment : Fragment() {
     private lateinit var historyAdapter: TrackAdapter
 
     private val searchViewModel: SearchViewModel by viewModel()
-    private var stringEditText = ""
     private val trackList = mutableListOf<Track>()
-    private var clickDebounce = true
 
+    private var editTextFocus = false
+    private var stringEditText = ""
+    private var clickDebounce = true
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
     override fun onCreateView(
@@ -42,13 +43,9 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        searchViewModel.observeState().observe(viewLifecycleOwner) {
-            render(it)
-        }
+        searchViewModel.observeState().observe(viewLifecycleOwner) { render(it) }
 
-        searchViewModel.observeClickDebounce().observe(viewLifecycleOwner) {
-            clickDebounce = it
-        }
+        searchViewModel.observeClickDebounce().observe(viewLifecycleOwner) { clickDebounce = it }
 
         searchAdapter = TrackAdapter { launchPlayerActivity(it) }
         binding.rvSearchTrack.adapter = searchAdapter
@@ -62,12 +59,8 @@ class SearchFragment : Fragment() {
         }
 
         binding.etSearch.setOnFocusChangeListener { _, hasFocus ->
-            binding.svHistoryTrack.visibility =
-                if (hasFocus && binding.etSearch.text.isNullOrEmpty() && getHistoryTracks().size > 0) {
-                    View.VISIBLE
-                } else {
-                    View.GONE
-                }
+            editTextFocus = hasFocus
+            binding.svHistoryTrack.visibility = historyVisibility(hasFocus)
         }
 
         binding.ivClearIcon.setOnClickListener {
@@ -83,9 +76,7 @@ class SearchFragment : Fragment() {
 
 
         val searchTextWatcher = object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
-            }
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 stringEditText = p0.toString()
@@ -96,9 +87,7 @@ class SearchFragment : Fragment() {
                 searchViewModel.searchDebounce(p0.toString())
             }
 
-            override fun afterTextChanged(p0: Editable?) {
-
-            }
+            override fun afterTextChanged(p0: Editable?) {}
         }
         binding.etSearch.addTextChangedListener(searchTextWatcher)
 
@@ -119,26 +108,27 @@ class SearchFragment : Fragment() {
     }
 
     private fun clearHistoryButtonClicked() {
-        binding.svHistoryTrack.visibility = View.GONE
-
         searchViewModel.clearTracks()
+        binding.svHistoryTrack.visibility = historyVisibility(editTextFocus)
 
         binding.rvHistoryTrack.adapter?.notifyDataSetChanged()
-    }
-
-    private fun addTrackToSearchHistory(track: Track) {
-        searchViewModel.saveTrack(track)
-
     }
 
     private fun launchPlayerActivity(track: Track) {
         if (clickDebounce) {
             searchViewModel.clickDebounceCheck()
             addTrackToSearchHistory(track)
+
             val intentPlayerActivity = Intent(requireContext(), PlayerActivity::class.java)
             intentPlayerActivity.putExtra(PlayerActivity.TRACK, Gson().toJson(track))
             startActivity(intentPlayerActivity)
+
+            historyAdapter.setItems(getHistoryTracks())
         }
+    }
+
+    private fun addTrackToSearchHistory(track: Track) {
+        searchViewModel.saveTrack(track)
     }
 
     private fun getHistoryTracks(): List<Track> {
@@ -169,8 +159,17 @@ class SearchFragment : Fragment() {
         binding.llInternetError.visibility = View.GONE
         binding.pbLoading.visibility = View.GONE
 
-        binding.svHistoryTrack.visibility = View.VISIBLE
+        binding.svHistoryTrack.visibility = historyVisibility(editTextFocus)
     }
+
+    private fun historyVisibility(hasFocus: Boolean): Int {
+        return if (hasFocus && binding.etSearch.text.isNullOrEmpty() && getHistoryTracks().size > 0) {
+            View.VISIBLE
+        } else {
+            View.GONE
+        }
+    }
+
 
     private fun showLoading() {
         binding.rvSearchTrack.visibility = View.GONE
@@ -205,8 +204,8 @@ class SearchFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        _binding = null
         super.onDestroyView()
+        _binding = null
     }
 
     companion object {
