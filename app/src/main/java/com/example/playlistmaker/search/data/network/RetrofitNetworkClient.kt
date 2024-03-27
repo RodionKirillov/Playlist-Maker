@@ -7,8 +7,6 @@ import com.example.playlistmaker.search.data.NetworkClient
 import com.example.playlistmaker.search.data.dto.Response
 import com.example.playlistmaker.search.data.dto.TrackSearchRequest
 import com.example.playlistmaker.util.ResourceProvider
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class RetrofitNetworkClient(
     private val iTunesSearchAPI: ITunesSearchAPI
@@ -16,7 +14,7 @@ class RetrofitNetworkClient(
 
     override fun doRequest(dto: Any): Response {
         if (!isConnected()) {
-            return Response().apply { resultCode == 0 }
+            return Response().apply { resultCode = -1 }
         }
 
         if (dto !is TrackSearchRequest) {

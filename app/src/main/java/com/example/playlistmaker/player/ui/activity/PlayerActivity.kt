@@ -12,7 +12,7 @@ import com.example.playlistmaker.databinding.ActivityPlayerBinding
 import com.example.playlistmaker.player.ui.model.PlayerState
 import com.example.playlistmaker.player.ui.view_model.PlayerViewModel
 import com.example.playlistmaker.search.domain.model.Track
-import com.example.playlistmaker.search.ui.activity.dpToPx
+import com.example.playlistmaker.search.ui.fragment.dpToPx
 import com.example.playlistmaker.util.DateTimeUtil
 import com.example.playlistmaker.util.ResourceProvider
 import com.google.gson.Gson
@@ -126,7 +126,7 @@ class PlayerActivity : AppCompatActivity() {
         binding.tvArtistName.text = track.artistName
         binding.tvTrackTime.text = DateTimeUtil.timeFormat(track.trackTime.toInt())
         binding.tvAlbumName.text = track.collectionName
-        binding.tvYearName.text = DateTimeUtil.dateFormat(track.releaseDate)
+        binding.tvYearName.text = DateTimeUtil.dateFormat(track.releaseDate!!)
         binding.tvGenreName.text = track.primaryGenreName
         binding.tvCountryName.text = track.country
     }

@@ -4,16 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/main_background_button_color"
+    android:background="@color/theme_color"
     android:orientation="vertical"
-    tools:context=".media.ui.activity.MediaActivity">
+    tools:context=".media.ui.fragment.MediaFragment">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/backButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/theme_color"
-        app:navigationIcon="@drawable/back_icon"
+        style="@style/CustomToolbarStyle"
         app:title="@string/media_menu"
         app:titleTextColor="@color/theme_color_night" />
 

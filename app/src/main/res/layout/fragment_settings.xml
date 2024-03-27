@@ -6,14 +6,14 @@
     android:layout_height="match_parent"
     android:background="?attr/colorSecondary"
     android:orientation="vertical"
-    tools:context=".settings.ui.activity.SettingsActivity">
+    tools:context=".settings.ui.fragment.SettingsFragment">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/bBack"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:title="@string/settings"
-        app:navigationIcon="@drawable/back_icon" />
+        style="@style/CustomToolbarStyle"
+        app:title="@string/settings" />
 
 
     <FrameLayout

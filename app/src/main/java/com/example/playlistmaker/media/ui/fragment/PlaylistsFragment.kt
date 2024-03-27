@@ -27,6 +27,11 @@ class PlaylistsFragment : Fragment() {
         return binding.root
     }
 
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
+    }
+
 
     companion object {
         fun newInstance() = PlaylistsFragment()
