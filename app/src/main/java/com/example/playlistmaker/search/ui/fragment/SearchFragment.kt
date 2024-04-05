@@ -10,11 +10,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.player.ui.activity.PlayerActivity
 import com.example.playlistmaker.search.domain.model.Track
 import com.example.playlistmaker.search.ui.model.SearchState
 import com.example.playlistmaker.search.ui.view_model.SearchViewModel
+import com.example.playlistmaker.util.debounce
 import com.google.gson.Gson
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -22,13 +24,13 @@ class SearchFragment : Fragment() {
 
     private lateinit var searchAdapter: TrackAdapter
     private lateinit var historyAdapter: TrackAdapter
+    private lateinit var onTrackClickDebounce: (Track) -> Unit
 
     private val searchViewModel: SearchViewModel by viewModel()
     private val trackList = mutableListOf<Track>()
 
     private var editTextFocus = false
     private var stringEditText = ""
-    private var clickDebounce = true
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
     override fun onCreateView(
@@ -43,14 +45,26 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        onTrackClickDebounce = debounce<Track>(
+            CLICK_DEBOUNCE_DELAY_MILLIS,
+            viewLifecycleOwner.lifecycleScope,
+            false
+        ) { track ->
+            addTrackToSearchHistory(track)
+
+            val intentPlayerActivity = Intent(requireContext(), PlayerActivity::class.java)//TODO Переделать интент
+            intentPlayerActivity.putExtra(PlayerActivity.TRACK, Gson().toJson(track))
+            startActivity(intentPlayerActivity)
+
+            historyAdapter.setItems(getHistoryTracks())
+        }
+
         searchViewModel.observeState().observe(viewLifecycleOwner) { render(it) }
 
-        searchViewModel.observeClickDebounce().observe(viewLifecycleOwner) { clickDebounce = it }
-
-        searchAdapter = TrackAdapter { launchPlayerActivity(it) }
+        searchAdapter = TrackAdapter { onTrackClickDebounce(it) }
         binding.rvSearchTrack.adapter = searchAdapter
 
-        historyAdapter = TrackAdapter { launchPlayerActivity(it) }
+        historyAdapter = TrackAdapter { onTrackClickDebounce(it) }
         binding.rvHistoryTrack.adapter = historyAdapter
         historyAdapter.setItems(getHistoryTracks())
 
@@ -112,19 +126,6 @@ class SearchFragment : Fragment() {
         binding.svHistoryTrack.visibility = historyVisibility(editTextFocus)
 
         binding.rvHistoryTrack.adapter?.notifyDataSetChanged()
-    }
-
-    private fun launchPlayerActivity(track: Track) {
-        if (clickDebounce) {
-            searchViewModel.clickDebounceCheck()
-            addTrackToSearchHistory(track)
-
-            val intentPlayerActivity = Intent(requireContext(), PlayerActivity::class.java)
-            intentPlayerActivity.putExtra(PlayerActivity.TRACK, Gson().toJson(track))
-            startActivity(intentPlayerActivity)
-
-            historyAdapter.setItems(getHistoryTracks())
-        }
     }
 
     private fun addTrackToSearchHistory(track: Track) {
@@ -210,5 +211,6 @@ class SearchFragment : Fragment() {
 
     companion object {
         private const val STRING_EDIT_TEXT = "STRING_EDIT_TEXT"
+        private const val CLICK_DEBOUNCE_DELAY_MILLIS = 0L
     }
 }

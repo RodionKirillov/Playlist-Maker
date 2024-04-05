@@ -5,6 +5,7 @@ import android.os.Handler
 import android.os.Looper
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
@@ -16,6 +17,10 @@ import com.example.playlistmaker.search.ui.fragment.dpToPx
 import com.example.playlistmaker.util.DateTimeUtil
 import com.example.playlistmaker.util.ResourceProvider
 import com.google.gson.Gson
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
@@ -28,7 +33,7 @@ class PlayerActivity : AppCompatActivity() {
     private val viewModel: PlayerViewModel by viewModel() {
         parametersOf(track)
     }
-    private var mainThreadHandler = Handler(Looper.getMainLooper())
+    private var timerJob: Job? = null
     private val defaultTimeText = ResourceProvider.getString(R.string.default_track_time)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,27 +59,23 @@ class PlayerActivity : AppCompatActivity() {
         binding.ivPauseButton.setOnClickListener { playbackControl(playerState) }
     }
 
-    private fun createUpdateTimer(): Runnable {
-        return object : Runnable {
-            override fun run() {
-                if (playerState == PlayerState.STATE_PLAYING) {
-                    binding.tvTrackTimePlay.text =
-                        DateTimeUtil.timeFormat(
-                            (viewModel.getCurrentPosition() + REFRESH_TRACK_TIMER_MILLIS).toInt()
-                        )
-
-                    mainThreadHandler.postDelayed(this, REFRESH_TRACK_TIMER_MILLIS)
-                }
+    private fun createUpdateTimer() {
+        timerJob = lifecycleScope.launch {
+            while (true) {
+                delay(REFRESH_TRACK_TIMER_MILLIS)
+                binding.tvTrackTimePlay.text = DateTimeUtil.timeFormat(
+                    viewModel.getCurrentPosition().toInt()
+                )
             }
         }
     }
 
     private fun removeUpdateTimer() {
-        mainThreadHandler.removeCallbacks(createUpdateTimer())
+        timerJob?.cancel()
     }
 
     private fun startUpdateTimer() {
-        mainThreadHandler.post(createUpdateTimer())
+        createUpdateTimer()
     }
 
     private fun playbackControl(state: PlayerState) {
@@ -149,6 +150,6 @@ class PlayerActivity : AppCompatActivity() {
 
     companion object {
         const val TRACK = "TRACK"
-        private const val REFRESH_TRACK_TIMER_MILLIS = 500L
+        private const val REFRESH_TRACK_TIMER_MILLIS = 300L
     }
 }

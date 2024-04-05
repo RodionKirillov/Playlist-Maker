@@ -8,6 +8,8 @@ import com.example.playlistmaker.search.data.dto.TrackResponse
 import com.example.playlistmaker.search.data.dto.TrackSearchRequest
 import com.example.playlistmaker.search.domain.model.Track
 import com.example.playlistmaker.util.Resource
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 
 class TrackRepositoryImpl(
@@ -15,21 +17,21 @@ class TrackRepositoryImpl(
     private val memoryClient: MemoryClient
 ) : TrackRepository {
 
-    override fun searchTracks(expression: String): Resource<List<Track>> {
+    override fun searchTracks(expression: String): Flow<Resource<List<Track>>> = flow {
         val response = networkClient.doRequest(TrackSearchRequest(expression))
-        return when (response.resultCode) {
+        when (response.resultCode) {
 
             -1 -> {
-                Resource.Error("Проверьте подключение к интернету")
+                emit(Resource.Error("Проверьте подключение к интернету"))
             }
 
 
             200 -> {
-                Resource.Success(createTrackFromTrackDto((response as TrackResponse).results))
+                emit(Resource.Success(createTrackFromTrackDto((response as TrackResponse).results)))
             }
 
             else -> {
-                Resource.Error("Ошибка сервера")
+                emit(Resource.Error("Ошибка сервера"))
             }
         }
     }
