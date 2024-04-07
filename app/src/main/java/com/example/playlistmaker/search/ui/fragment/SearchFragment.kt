@@ -211,6 +211,6 @@ class SearchFragment : Fragment() {
 
     companion object {
         private const val STRING_EDIT_TEXT = "STRING_EDIT_TEXT"
-        private const val CLICK_DEBOUNCE_DELAY_MILLIS = 0L
+        private const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
     }
 }
