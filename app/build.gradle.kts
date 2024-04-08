@@ -40,6 +40,8 @@ android {
 }
 
 dependencies {
+    //Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
     //Jetpack Navigation Component
     implementation ("androidx.navigation:navigation-fragment-ktx:2.7.7")
     implementation ("androidx.navigation:navigation-ui-ktx:2.7.7")
@@ -55,9 +57,9 @@ dependencies {
     //MVVM
     implementation ("androidx.core:core-ktx:1.12.0")
     //GSON
-    implementation("com.google.code.gson:gson:2.10")
+    implementation("com.google.code.gson:gson:2.10.1")
     //Retrofit
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:retrofit:2.10.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     // Glide
     implementation("com.google.android.material:material:1.11.0")
