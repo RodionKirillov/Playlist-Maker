@@ -1,5 +1,7 @@
 package com.example.playlistmaker.player.ui.activity
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -151,5 +153,11 @@ class PlayerActivity : AppCompatActivity() {
     companion object {
         const val TRACK = "TRACK"
         private const val REFRESH_TRACK_TIMER_MILLIS = 300L
+
+        fun newInstance(context: Context, track: String): Intent {
+            return Intent(context, PlayerActivity::class.java).apply {
+                putExtra(TRACK, track)
+            }
+        }
     }
 }

@@ -18,17 +18,19 @@ import com.example.playlistmaker.search.ui.model.SearchState
 import com.example.playlistmaker.search.ui.view_model.SearchViewModel
 import com.example.playlistmaker.util.debounce
 import com.google.gson.Gson
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment() {
 
     private lateinit var searchAdapter: TrackAdapter
     private lateinit var historyAdapter: TrackAdapter
-    private lateinit var onTrackClickDebounce: (Track) -> Unit
 
     private val searchViewModel: SearchViewModel by viewModel()
     private val trackList = mutableListOf<Track>()
 
+    private var isClickAllowed = true
     private var editTextFocus = false
     private var stringEditText = ""
     private var _binding: FragmentSearchBinding? = null
@@ -45,26 +47,12 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        onTrackClickDebounce = debounce<Track>(
-            CLICK_DEBOUNCE_DELAY_MILLIS,
-            viewLifecycleOwner.lifecycleScope,
-            false
-        ) { track ->
-            addTrackToSearchHistory(track)
-
-            val intentPlayerActivity = Intent(requireContext(), PlayerActivity::class.java)//TODO Переделать интент
-            intentPlayerActivity.putExtra(PlayerActivity.TRACK, Gson().toJson(track))
-            startActivity(intentPlayerActivity)
-
-            historyAdapter.setItems(getHistoryTracks())
-        }
-
         searchViewModel.observeState().observe(viewLifecycleOwner) { render(it) }
 
-        searchAdapter = TrackAdapter { onTrackClickDebounce(it) }
+        searchAdapter = TrackAdapter { launchPlayerActivity(it) }
         binding.rvSearchTrack.adapter = searchAdapter
 
-        historyAdapter = TrackAdapter { onTrackClickDebounce(it) }
+        historyAdapter = TrackAdapter { launchPlayerActivity(it) }
         binding.rvHistoryTrack.adapter = historyAdapter
         historyAdapter.setItems(getHistoryTracks())
 
@@ -115,6 +103,32 @@ class SearchFragment : Fragment() {
         }
     }
 
+    private fun launchPlayerActivity(track: Track) {
+        if (clickDebounce()) {
+            addTrackToSearchHistory(track)
+
+            startActivity(
+                PlayerActivity.newInstance(
+                    requireContext(),
+                    Gson().toJson(track)
+                )
+            )
+
+            historyAdapter.setItems(getHistoryTracks())
+        }
+    }
+
+    private fun clickDebounce(): Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            viewLifecycleOwner.lifecycleScope.launch {
+                delay(CLICK_DEBOUNCE_DELAY_MILLIS)
+                isClickAllowed = true
+            }
+        }
+        return current
+    }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -144,6 +158,14 @@ class SearchFragment : Fragment() {
         }
     }
 
+    private fun historyVisibility(hasFocus: Boolean): Int {
+        return if (hasFocus && binding.etSearch.text.isNullOrEmpty() && getHistoryTracks().size > 0) {
+            View.VISIBLE
+        } else {
+            View.GONE
+        }
+    }
+
     private fun render(state: SearchState) {
         when (state) {
             is SearchState.Content -> showContent(state.tracks)
@@ -162,15 +184,6 @@ class SearchFragment : Fragment() {
 
         binding.svHistoryTrack.visibility = historyVisibility(editTextFocus)
     }
-
-    private fun historyVisibility(hasFocus: Boolean): Int {
-        return if (hasFocus && binding.etSearch.text.isNullOrEmpty() && getHistoryTracks().size > 0) {
-            View.VISIBLE
-        } else {
-            View.GONE
-        }
-    }
-
 
     private fun showLoading() {
         binding.rvSearchTrack.visibility = View.GONE
