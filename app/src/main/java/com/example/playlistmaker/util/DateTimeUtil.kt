@@ -14,10 +14,13 @@ object DateTimeUtil {
         )
     }
 
-    fun dateFormat(date: Date): String {
-        return SimpleDateFormat(
-            "yyyy",
-            Locale.getDefault()
-        ).format(date)
+    fun dateFormat(date: String): String {
+        return if (date != null) {
+            val result = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(date)
+
+            SimpleDateFormat("yyyy", Locale.getDefault()).format(result)
+        } else {
+            "Неизвестен"
+        }
     }
 }

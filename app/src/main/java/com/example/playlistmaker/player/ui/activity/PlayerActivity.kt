@@ -59,6 +59,18 @@ class PlayerActivity : AppCompatActivity() {
             }
         }
         binding.ivPauseButton.setOnClickListener { playbackControl(playerState) }
+
+        binding.ivAddToFavoriteButton.setOnClickListener {
+            viewModel.onFavoriteClicked()
+        }
+
+        viewModel.isFavorite.observe(this) { isFavorite ->
+            if (isFavorite) {
+                binding.ivAddToFavoriteButton.setImageResource(R.drawable.add_to_favorite_on_icon)
+            } else {
+                binding.ivAddToFavoriteButton.setImageResource(R.drawable.add_to_favorite_icon)
+            }
+        }
     }
 
     private fun createUpdateTimer() {
