@@ -3,12 +3,12 @@ package com.example.playlistmaker.di
 import android.content.Context
 import com.example.playlistmaker.search.data.MemoryClient
 import com.example.playlistmaker.search.data.NetworkClient
-import com.example.playlistmaker.search.data.TrackRepository
+import com.example.playlistmaker.search.domain.repository.TrackRepository
 import com.example.playlistmaker.search.data.impl.TrackRepositoryImpl
 import com.example.playlistmaker.search.data.memory.SharedPreferencesMemoryClient
 import com.example.playlistmaker.search.data.network.ITunesSearchAPI
 import com.example.playlistmaker.search.data.network.RetrofitNetworkClient
-import com.example.playlistmaker.search.domain.TracksInteractor
+import com.example.playlistmaker.search.domain.interactor.TracksInteractor
 import com.example.playlistmaker.search.domain.impl.TracksInteractorImpl
 import com.example.playlistmaker.search.ui.view_model.SearchViewModel
 import org.koin.android.ext.koin.androidContext

@@ -1,4 +1,4 @@
-package com.example.playlistmaker.media.data
+package com.example.playlistmaker.media.domain.db
 
 import com.example.playlistmaker.search.domain.model.Track
 import kotlinx.coroutines.flow.Flow

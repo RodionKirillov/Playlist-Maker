@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.playlistmaker.media.domain.FavoriteInteractor
+import com.example.playlistmaker.media.domain.db.FavoriteInteractor
 import com.example.playlistmaker.player.data.impl.PlayerRepositoryImpl
-import com.example.playlistmaker.player.domain.PlayerInteractor
+import com.example.playlistmaker.player.domain.interactor.PlayerInteractor
 import com.example.playlistmaker.player.ui.model.PlayerState
 import com.example.playlistmaker.search.domain.model.Track
 import kotlinx.coroutines.launch

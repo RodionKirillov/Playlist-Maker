@@ -1,7 +1,7 @@
 package com.example.playlistmaker.player.data.impl
 
 import android.media.MediaPlayer
-import com.example.playlistmaker.player.data.PlayerRepository
+import com.example.playlistmaker.player.domain.repository.PlayerRepository
 import com.example.playlistmaker.search.domain.model.Track
 
 class PlayerRepositoryImpl(

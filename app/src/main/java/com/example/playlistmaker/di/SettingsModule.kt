@@ -1,11 +1,11 @@
 package com.example.playlistmaker.di
 
 import android.content.Context
-import com.example.playlistmaker.settings.data.SettingsRepository
-import com.example.playlistmaker.settings.data.ThemeMemory
+import com.example.playlistmaker.settings.domain.repository.SettingsRepository
+import com.example.playlistmaker.settings.data.memory.ThemeMemory
 import com.example.playlistmaker.settings.data.impl.SettingsRepositoryImpl
 import com.example.playlistmaker.settings.data.memory.SharedPreferencesThemeMemory
-import com.example.playlistmaker.settings.domain.SettingsInteractor
+import com.example.playlistmaker.settings.domain.interactor.SettingsInteractor
 import com.example.playlistmaker.settings.domain.impl.SettingsInteractorImpl
 import com.example.playlistmaker.settings.ui.view_model.SettingsViewModel
 import org.koin.android.ext.koin.androidContext

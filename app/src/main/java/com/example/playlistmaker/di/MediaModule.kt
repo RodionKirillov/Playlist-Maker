@@ -1,11 +1,11 @@
 package com.example.playlistmaker.di
 
 import androidx.room.Room
-import com.example.playlistmaker.media.data.FavoriteRepository
+import com.example.playlistmaker.media.domain.db.FavoriteRepository
 import com.example.playlistmaker.media.data.converters.TrackDbConvertor
 import com.example.playlistmaker.media.data.db.AppDatabase
 import com.example.playlistmaker.media.data.impl.FavoriteRepositoryImpl
-import com.example.playlistmaker.media.domain.FavoriteInteractor
+import com.example.playlistmaker.media.domain.db.FavoriteInteractor
 import com.example.playlistmaker.media.domain.impl.FavoriteInteractorImpl
 import com.example.playlistmaker.media.ui.view_model.FavoriteTracksViewModel
 import com.example.playlistmaker.media.ui.view_model.PlaylistsViewModel

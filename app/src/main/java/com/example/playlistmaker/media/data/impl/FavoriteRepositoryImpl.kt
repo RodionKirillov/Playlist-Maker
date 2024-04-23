@@ -1,13 +1,12 @@
 package com.example.playlistmaker.media.data.impl
 
-import com.example.playlistmaker.media.data.FavoriteRepository
+import com.example.playlistmaker.media.domain.db.FavoriteRepository
 import com.example.playlistmaker.media.data.converters.TrackDbConvertor
 import com.example.playlistmaker.media.data.db.AppDatabase
 import com.example.playlistmaker.media.data.db.entity.TrackEntity
 import com.example.playlistmaker.search.domain.model.Track
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
 
 class FavoriteRepositoryImpl(
     private val appDatabase: AppDatabase,

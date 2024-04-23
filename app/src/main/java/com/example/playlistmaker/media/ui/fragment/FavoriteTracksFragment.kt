@@ -27,8 +27,6 @@ class FavoriteTracksFragment : Fragment() {
 
     private val binding get() = _binding!!
 
-    private val trackList = mutableListOf<Track>()
-
     private val viewModel: FavoriteTracksViewModel by viewModel()
 
     override fun onCreateView(
@@ -101,14 +99,13 @@ class FavoriteTracksFragment : Fragment() {
         binding.recyclerViewFavoriteTracks.visibility = View.VISIBLE
         binding.trackNotFound.visibility = View.GONE
 
-        trackList.clear()
-        trackList.addAll(tracks)
         favoriteAdapter?.setItems(tracks)
     }
 
 
     companion object {
         fun newInstance() = FavoriteTracksFragment()
+
         private const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
     }
 }
