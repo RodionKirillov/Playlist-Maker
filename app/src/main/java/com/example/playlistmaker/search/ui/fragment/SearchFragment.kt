@@ -13,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.player.ui.activity.PlayerActivity
 import com.example.playlistmaker.search.domain.model.Track
+import com.example.playlistmaker.search.ui.adapter.TrackAdapter
 import com.example.playlistmaker.search.ui.model.SearchState
 import com.example.playlistmaker.search.ui.view_model.SearchViewModel
 import com.google.gson.Gson
@@ -44,15 +45,8 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         searchViewModel.observeState().observe(viewLifecycleOwner) { render(it) }
-
-        searchAdapter = TrackAdapter { launchPlayerActivity(it) }
-        binding.rvSearchTrack.adapter = searchAdapter
-
-        historyAdapter = TrackAdapter { launchPlayerActivity(it) }
-        binding.rvHistoryTrack.adapter = historyAdapter
-        historyAdapter.setItems(getHistoryTracks())
+        setupRecyclerView()
 
         binding.bCleanHistory.setOnClickListener {
             clearHistoryButtonClicked()
@@ -66,7 +60,6 @@ class SearchFragment : Fragment() {
         binding.ivClearIcon.setOnClickListener {
             binding.etSearch.setText("")
             trackList.clear()
-            searchAdapter.notifyDataSetChanged()
             searchViewModel.showHistory()
 
             val inputMethodManager =
@@ -101,6 +94,17 @@ class SearchFragment : Fragment() {
         }
     }
 
+    private fun setupRecyclerView() {
+        searchAdapter = TrackAdapter()
+        binding.rvSearchTrack.adapter = searchAdapter
+        searchAdapter.onTrackClickListener = { launchPlayerActivity(it) }
+
+        historyAdapter = TrackAdapter()
+        binding.rvHistoryTrack.adapter = historyAdapter
+        historyAdapter.onTrackClickListener = { launchPlayerActivity(it) }
+        historyAdapter.submitList(getHistoryTracks())
+    }
+
     private fun launchPlayerActivity(track: Track) {
         if (clickDebounce()) {
             addTrackToSearchHistory(track)
@@ -112,7 +116,7 @@ class SearchFragment : Fragment() {
                 )
             )
 
-            historyAdapter.setItems(getHistoryTracks())
+            historyAdapter.submitList(getHistoryTracks())
         }
     }
 
@@ -136,8 +140,6 @@ class SearchFragment : Fragment() {
     private fun clearHistoryButtonClicked() {
         searchViewModel.clearTracks()
         binding.svHistoryTrack.visibility = historyVisibility(editTextFocus)
-
-        binding.rvHistoryTrack.adapter?.notifyDataSetChanged()
     }
 
     private fun addTrackToSearchHistory(track: Track) {
@@ -212,7 +214,7 @@ class SearchFragment : Fragment() {
 
         trackList.clear()
         trackList.addAll(tracks)
-        searchAdapter.setItems(trackList)
+        searchAdapter.submitList(trackList)
     }
 
     override fun onDestroyView() {

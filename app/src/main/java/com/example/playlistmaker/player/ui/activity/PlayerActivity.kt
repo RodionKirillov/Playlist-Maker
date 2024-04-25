@@ -3,8 +3,6 @@ package com.example.playlistmaker.player.ui.activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -15,12 +13,11 @@ import com.example.playlistmaker.databinding.ActivityPlayerBinding
 import com.example.playlistmaker.player.ui.model.PlayerState
 import com.example.playlistmaker.player.ui.view_model.PlayerViewModel
 import com.example.playlistmaker.search.domain.model.Track
-import com.example.playlistmaker.search.ui.fragment.dpToPx
+import com.example.playlistmaker.search.ui.view_holder.dpToPx
 import com.example.playlistmaker.util.DateTimeUtil
 import com.example.playlistmaker.util.ResourceProvider
 import com.google.gson.Gson
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
