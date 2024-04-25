@@ -1,11 +1,10 @@
 package com.example.playlistmaker.sharing.data.impl
 
-import android.content.Context
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.net.Uri
 import com.example.playlistmaker.R
-import com.example.playlistmaker.sharing.data.ExternalNavigator
+import com.example.playlistmaker.sharing.domain.repository.ExternalNavigator
 import com.example.playlistmaker.sharing.domain.model.EmailData
 import com.example.playlistmaker.util.ResourceProvider
 

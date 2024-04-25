@@ -1,8 +1,8 @@
 package com.example.playlistmaker.player.domain.impl
 
 import com.example.playlistmaker.player.data.impl.PlayerRepositoryImpl
-import com.example.playlistmaker.player.domain.PlayerInteractor
-import com.example.playlistmaker.player.data.PlayerRepository
+import com.example.playlistmaker.player.domain.interactor.PlayerInteractor
+import com.example.playlistmaker.player.domain.repository.PlayerRepository
 import com.example.playlistmaker.search.domain.model.Track
 
 class PlayerInteractorImpl(

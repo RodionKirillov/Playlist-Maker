@@ -1,7 +1,6 @@
 package com.example.playlistmaker.settings.data.memory
 
 import android.content.SharedPreferences
-import com.example.playlistmaker.settings.data.ThemeMemory
 import com.example.playlistmaker.settings.data.model.ThemeSettings
 
 class SharedPreferencesThemeMemory(private val sharedPrefs: SharedPreferences) : ThemeMemory {

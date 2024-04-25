@@ -1,4 +1,4 @@
-package com.example.playlistmaker.player.data
+package com.example.playlistmaker.player.domain.repository
 
 import com.example.playlistmaker.player.data.impl.PlayerRepositoryImpl
 import com.example.playlistmaker.search.domain.model.Track

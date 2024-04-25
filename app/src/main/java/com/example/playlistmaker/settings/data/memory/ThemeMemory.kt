@@ -1,4 +1,4 @@
-package com.example.playlistmaker.settings.data
+package com.example.playlistmaker.settings.data.memory
 
 import com.example.playlistmaker.settings.data.model.ThemeSettings
 

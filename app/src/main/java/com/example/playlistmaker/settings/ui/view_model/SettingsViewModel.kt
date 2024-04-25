@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.settings.data.model.ThemeSettings
-import com.example.playlistmaker.settings.domain.SettingsInteractor
-import com.example.playlistmaker.sharing.domain.SharingInteractor
+import com.example.playlistmaker.settings.domain.interactor.SettingsInteractor
+import com.example.playlistmaker.sharing.domain.interactor.SharingInteractor
 import com.example.playlistmaker.util.App
 import com.example.playlistmaker.util.ResourceProvider
 

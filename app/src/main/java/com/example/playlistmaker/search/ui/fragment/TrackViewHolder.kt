@@ -27,7 +27,9 @@ class TrackViewHolder(private val binding: TrackItemBinding) :
             .centerCrop()
             .transform(RoundedCorners(dpToPx(2f, itemView.context)))
             .into(binding.trackImage)
+
         binding.artistName.requestLayout()
+        binding.trackTime.requestLayout()
     }
 }
 
