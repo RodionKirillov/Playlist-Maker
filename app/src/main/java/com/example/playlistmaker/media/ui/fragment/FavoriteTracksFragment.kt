@@ -11,7 +11,7 @@ import com.example.playlistmaker.media.ui.model.FavoriteState
 import com.example.playlistmaker.media.ui.view_model.FavoriteTracksViewModel
 import com.example.playlistmaker.player.ui.activity.PlayerActivity
 import com.example.playlistmaker.search.domain.model.Track
-import com.example.playlistmaker.search.ui.fragment.TrackAdapter
+import com.example.playlistmaker.search.ui.adapter.TrackAdapter
 import com.google.gson.Gson
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -46,8 +46,7 @@ class FavoriteTracksFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        favoriteAdapter = TrackAdapter { launchPlayerActivity(it) }
-        binding.recyclerViewFavoriteTracks.adapter = favoriteAdapter
+        setupRecyclerView()
 
         viewModel.getState.observe(viewLifecycleOwner) { state ->
             render(state)
@@ -58,6 +57,12 @@ class FavoriteTracksFragment : Fragment() {
         super.onDestroyView()
         _binding = null
         favoriteAdapter = null
+    }
+
+    private fun setupRecyclerView() {
+        favoriteAdapter = TrackAdapter()
+        binding.recyclerViewFavoriteTracks.adapter = favoriteAdapter
+        favoriteAdapter!!.onTrackClickListener = { launchPlayerActivity(it) }
     }
 
     private fun launchPlayerActivity(track: Track) {
@@ -99,7 +104,7 @@ class FavoriteTracksFragment : Fragment() {
         binding.recyclerViewFavoriteTracks.visibility = View.VISIBLE
         binding.trackNotFound.visibility = View.GONE
 
-        favoriteAdapter?.setItems(tracks)
+        favoriteAdapter?.submitList(tracks)
     }
 
 

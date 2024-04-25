@@ -1,4 +1,4 @@
-package com.example.playlistmaker.search.ui.fragment
+package com.example.playlistmaker.search.ui.view_holder
 
 import android.content.Context
 import android.util.TypedValue
@@ -10,12 +10,9 @@ import com.example.playlistmaker.databinding.TrackItemBinding
 import com.example.playlistmaker.search.domain.model.Track
 import com.example.playlistmaker.util.DateTimeUtil
 
-class TrackViewHolder(private val binding: TrackItemBinding) :
-    RecyclerView.ViewHolder(binding.root) {
-
-    private fun trackTimeFormat(trackTime: String): String {
-        return DateTimeUtil.timeFormat(trackTime.toInt())
-    }
+class TrackViewHolder(
+    private val binding: TrackItemBinding
+) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(model: Track) {
         binding.trackName.text = model.trackName
@@ -31,6 +28,10 @@ class TrackViewHolder(private val binding: TrackItemBinding) :
         binding.artistName.requestLayout()
         binding.trackTime.requestLayout()
     }
+}
+
+private fun trackTimeFormat(trackTime: String): String {
+    return DateTimeUtil.timeFormat(trackTime.toInt())
 }
 
 fun dpToPx(dp: Float, context: Context): Int {
