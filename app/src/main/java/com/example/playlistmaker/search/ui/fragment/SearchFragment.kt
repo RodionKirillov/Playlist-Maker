@@ -27,7 +27,6 @@ class SearchFragment : Fragment() {
     private lateinit var historyAdapter: TrackAdapter
 
     private val searchViewModel: SearchViewModel by viewModel()
-    private val trackList = mutableListOf<Track>()
 
     private var isClickAllowed = true
     private var editTextFocus = false
@@ -59,7 +58,6 @@ class SearchFragment : Fragment() {
 
         binding.ivClearIcon.setOnClickListener {
             binding.etSearch.setText("")
-            trackList.clear()
             searchViewModel.showHistory()
 
             val inputMethodManager =
@@ -212,9 +210,7 @@ class SearchFragment : Fragment() {
         binding.llInternetError.visibility = View.GONE
         binding.pbLoading.visibility = View.GONE
 
-        trackList.clear()
-        trackList.addAll(tracks)
-        searchAdapter.submitList(trackList)
+        searchAdapter.submitList(tracks)
     }
 
     override fun onDestroyView() {

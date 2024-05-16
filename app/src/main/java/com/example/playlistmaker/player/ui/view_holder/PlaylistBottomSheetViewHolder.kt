@@ -13,16 +13,23 @@ class PlaylistBottomSheetViewHolder(
     private val binding: PlaylistBottomSheetItemBinding
 ): RecyclerView.ViewHolder(binding.root) {
 
-
     fun bind(model: Playlist) {
-        val count = model.trackCount.toString()
-        binding.tvPlaylistCount.text = count.plus(itemView.context.getString(R.string.track))
+        val count = model.trackCount
+        binding.tvPlaylistCount.text = count.toString().plus(trackCountEnd(count))
         binding.tvPlaylistName.text = model.name
 
-        if (model.image.isNotEmpty()) {
+        if (!model.image.isNullOrEmpty()) {
             binding.ivPlaylistImage.setImageURI(loadImageUri(model.image))
         } else {
             binding.ivPlaylistImage.setImageResource(R.drawable.placeholder_icon)
+        }
+    }
+
+    private fun trackCountEnd(countTracks: Int): String {
+        return when {
+            (countTracks % 20) in 10..20 || (countTracks % 10) in 5..9  || (countTracks % 10) == 0 -> " треков"
+            (countTracks % 10) == 1 -> " трек"
+            else -> " трека"
         }
     }
 

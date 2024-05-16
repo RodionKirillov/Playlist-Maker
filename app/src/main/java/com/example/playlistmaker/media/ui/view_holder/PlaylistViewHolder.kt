@@ -18,7 +18,7 @@ class PlaylistViewHolder(
         binding.tvPlaylistCount.text = count.toString().plus(trackCountEnd(count))
         binding.tvPlaylistName.text = model.name
 
-        if (model.image.isNotEmpty()) {
+        if (!model.image.isNullOrEmpty()) {
             binding.ivPlaylistImage.setImageURI(loadImageUri(model.image))
         } else {
             binding.ivPlaylistImage.setImageResource(R.drawable.placeholder_icon)

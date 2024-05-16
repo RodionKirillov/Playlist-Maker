@@ -8,21 +8,21 @@
     android:gravity="center">
 
     <LinearLayout
-        android:layout_width="160dp"
+        android:layout_width="@dimen/playlist_dimen"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_marginVertical="8dp">
 
         <androidx.cardview.widget.CardView
-            android:layout_width="160dp"
-            android:layout_height="160dp"
-            app:cardCornerRadius="8dp"
+            android:layout_width="@dimen/playlist_dimen"
+            android:layout_height="@dimen/playlist_dimen"
+            app:cardCornerRadius="@dimen/corner_dimen"
             app:cardElevation="0dp">
 
             <ImageView
                 android:id="@+id/ivPlaylistImage"
-                android:layout_width="160dp"
-                android:layout_height="160dp"
+                android:layout_width="@dimen/playlist_dimen"
+                android:layout_height="@dimen/playlist_dimen"
                 android:contentDescription="@null"
                 android:scaleType="centerCrop"
                 android:src="@drawable/placeholder_icon"

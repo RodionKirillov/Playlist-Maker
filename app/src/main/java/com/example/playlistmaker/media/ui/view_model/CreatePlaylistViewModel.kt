@@ -11,27 +11,10 @@ class CreatePlaylistViewModel(
     private val playlistInteractor: PlaylistInteractor
 ) : ViewModel() {
 
-//    private var playlistName: String = ""
-//    private var playlistDescription: String = ""
-//    private var imageUri: String = ""
-//
-//    private fun setPlaylistName(name: String) {
-//        playlistName = name
-//    }
-//
-//    private fun setPlaylistDescription(description: String) {
-//        playlistDescription = description
-//    }
-//
-//    private fun setImageUri(imageUri: String) {
-//        this.imageUri = imageUri
-//    }
-
-
     fun insertPlaylist(
         name: String,
-        description: String,
-        image: String,
+        description: String?,
+        image: String?,
     ) {
         val playlist = Playlist(
             name = name,

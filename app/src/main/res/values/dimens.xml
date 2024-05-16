@@ -2,4 +2,6 @@
 <resources>
     <dimen name="main_margin">16dp</dimen>
     <dimen name="settings_dp">21dp</dimen>
+    <dimen name="playlist_dimen">160dp</dimen>
+    <dimen name="corner_dimen">8dp</dimen>
 </resources>

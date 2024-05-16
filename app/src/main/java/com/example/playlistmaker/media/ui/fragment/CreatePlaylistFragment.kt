@@ -159,22 +159,14 @@ class CreatePlaylistFragment : Fragment() {
             Toast.LENGTH_SHORT
         ).show()
 
-        if (playlistDescription == null) {
-            playlistDescription = ""
-        }
-
-        if (imageUriName == null) {
-            imageUriName = ""
-        }
-
         if (playlistName == null) {
             return
         }
 
         viewModel.insertPlaylist(
             playlistName!!,
-            playlistDescription!!,
-            imageUriName!!,
+            playlistDescription,
+            imageUriName,
         )
 
         try {
@@ -201,10 +193,10 @@ class CreatePlaylistFragment : Fragment() {
 
     private fun showDialog() {
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Завершить создание плейлиста?")
-            .setMessage("Все несохраненные данные будут потеряны")
-            .setNeutralButton("Отмена") { dialog, which -> }
-            .setNegativeButton("Завершить") { dialog, which ->
+            .setTitle(getString(R.string.finish_creating_a_playlist))
+            .setMessage(getString(R.string.all_unsaved_data_will_be_lost))
+            .setNeutralButton(getString(R.string.cancel)) { _, _ -> }
+            .setNegativeButton(getString(R.string.end)) { _, _ ->
                 try {
                     findNavController().navigateUp()
                 } catch (e: Exception) {

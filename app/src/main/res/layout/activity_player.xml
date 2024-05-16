@@ -9,19 +9,10 @@
     tools:context=".player.ui.activity.PlayerActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/theme_color">
-
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/backButtonPlayerActivity"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@id/ivTrackImage"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:navigationIcon="@drawable/back_icon" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/leftBorder"
@@ -38,6 +29,18 @@
             app:layout_constraintGuide_end="24dp" />
 
         <ImageView
+            android:id="@+id/backButtonPlayerActivity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:contentDescription="@null"
+            android:padding="16dp"
+            android:src="@drawable/back_icon"
+            app:layout_constraintBottom_toTopOf="@+id/ivTrackImage"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
             android:id="@+id/ivTrackImage"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -47,7 +50,7 @@
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toStartOf="@id/rightBorder"
             app:layout_constraintStart_toEndOf="@id/leftBorder"
-            app:layout_constraintTop_toBottomOf="@id/backButtonPlayerActivity"
+            app:layout_constraintTop_toBottomOf="@+id/backButtonPlayerActivity"
             tools:background="@color/black" />
 
         <TextView
@@ -297,7 +300,7 @@
             android:layout_marginTop="30dp"
             android:fontFamily="@font/ys_display_medium"
             android:gravity="center"
-            android:text="Добавить в плейлист"
+            android:text="@string/add_to_playlist"
             android:textColor="@color/theme_color_night"
             android:textSize="19sp" />
 
@@ -325,6 +328,8 @@
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/playlistBottomSheetFragmentContainerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        app:layout_anchor="@+id/constraintLayout"
+        app:layout_anchorGravity="center" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
