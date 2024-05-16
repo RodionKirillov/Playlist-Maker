@@ -1,261 +1,335 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/theme_color"
+    android:orientation="vertical"
     tools:context=".player.ui.activity.PlayerActivity">
 
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/backButtonPlayerActivity"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:navigationIcon="@drawable/back_icon"
-        app:layout_constraintBottom_toTopOf="@id/ivTrackImage"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="match_parent"
+        android:background="@color/theme_color">
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/leftBorder"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/leftBorder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="24dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/rightBorder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="24dp" />
+
+        <ImageView
+            android:id="@+id/backButtonPlayerActivity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:contentDescription="@null"
+            android:padding="16dp"
+            android:src="@drawable/back_icon"
+            app:layout_constraintBottom_toTopOf="@+id/ivTrackImage"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/ivTrackImage"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:contentDescription="@null"
+            android:src="@drawable/placeholder_icon"
+            app:layout_constraintBottom_toTopOf="@id/tvTrackName"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toStartOf="@id/rightBorder"
+            app:layout_constraintStart_toEndOf="@id/leftBorder"
+            app:layout_constraintTop_toBottomOf="@+id/backButtonPlayerActivity"
+            tools:background="@color/black" />
+
+        <TextView
+            android:id="@+id/tvTrackName"
+            style="TextStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/ys_display_medium"
+            android:maxLines="1"
+            android:textSize="22sp"
+            app:layout_constraintBottom_toTopOf="@id/tvArtistName"
+            app:layout_constraintEnd_toStartOf="@+id/rightBorder"
+            app:layout_constraintStart_toEndOf="@id/leftBorder"
+            app:layout_constraintTop_toBottomOf="@id/ivTrackImage"
+            tools:text="Yesterday (Remastered 2009)" />
+
+        <TextView
+            android:id="@+id/tvArtistName"
+            style="TextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/ys_display_medium"
+            android:maxLines="1"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toTopOf="@id/ivPlayButton"
+            app:layout_constraintStart_toEndOf="@id/leftBorder"
+            app:layout_constraintTop_toBottomOf="@id/tvTrackName"
+            tools:text="The Beatles" />
+
+        <ImageView
+            android:id="@+id/ivPlayButton"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:contentDescription="@null"
+            android:foreground="?attr/selectableItemBackground"
+            android:src="@drawable/play_button_light_theme"
+            android:visibility="visible"
+            app:layout_constraintBottom_toTopOf="@id/tvTrackTimePlay"
+            app:layout_constraintEnd_toStartOf="@id/ivAddToFavoriteButton"
+            app:layout_constraintStart_toEndOf="@id/ivAddToPlaylistButton"
+            app:layout_constraintTop_toBottomOf="@id/tvArtistName" />
+
+        <ImageView
+            android:id="@+id/ivPauseButton"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:contentDescription="@null"
+            android:foreground="?attr/selectableItemBackground"
+            android:src="@drawable/pause_button_light_theme"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@id/ivPlayButton"
+            app:layout_constraintEnd_toEndOf="@id/ivPlayButton"
+            app:layout_constraintStart_toStartOf="@+id/ivPlayButton"
+            app:layout_constraintTop_toTopOf="@+id/ivPlayButton" />
+
+
+        <ImageView
+            android:id="@+id/ivAddToPlaylistButton"
+            android:layout_width="51dp"
+            android:layout_height="51dp"
+            android:contentDescription="@null"
+            android:foreground="?attr/selectableItemBackground"
+            android:src="@drawable/add_to_playlist_icon"
+            app:layout_constraintBottom_toBottomOf="@id/ivPlayButton"
+            app:layout_constraintEnd_toStartOf="@id/ivPlayButton"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintStart_toEndOf="@id/leftBorder"
+            app:layout_constraintTop_toTopOf="@id/ivPlayButton" />
+
+        <ImageView
+            android:id="@+id/ivAddToFavoriteButton"
+            android:layout_width="51dp"
+            android:layout_height="51dp"
+            android:contentDescription="@null"
+            android:foreground="?attr/selectableItemBackground"
+            android:src="@drawable/add_to_favorite_icon"
+            app:layout_constraintBottom_toBottomOf="@id/ivPlayButton"
+            app:layout_constraintEnd_toStartOf="@id/rightBorder"
+            app:layout_constraintStart_toEndOf="@id/ivPlayButton"
+            app:layout_constraintTop_toTopOf="@id/ivPlayButton" />
+
+        <TextView
+            android:id="@+id/tvTrackTimePlay"
+            style="TextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:fontFamily="@font/ys_display_medium"
+            android:text="@string/default_track_time"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toTopOf="@id/tvDescriptionTrackTime"
+            app:layout_constraintEnd_toStartOf="@id/rightBorder"
+            app:layout_constraintStart_toEndOf="@id/leftBorder"
+            app:layout_constraintTop_toBottomOf="@id/ivPlayButton" />
+
+
+        <TextView
+            android:id="@+id/tvDescriptionTrackTime"
+            style="@style/PlayerTrackInfoDescriptionTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_marginStart="16dp"
+            android:text="@string/track_time"
+            app:layout_constraintBottom_toTopOf="@+id/tvDescriptionAlbumName"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvTrackTimePlay" />
+
+        <TextView
+            android:id="@+id/tvDescriptionAlbumName"
+            style="@style/PlayerTrackInfoDescriptionTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_marginStart="16dp"
+            android:text="@string/album"
+            app:layout_constraintBottom_toTopOf="@+id/tvDescriptionYearName"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvDescriptionTrackTime" />
+
+        <TextView
+            android:id="@+id/tvDescriptionYearName"
+            style="@style/PlayerTrackInfoDescriptionTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_marginStart="16dp"
+            android:text="@string/year"
+            app:layout_constraintBottom_toTopOf="@+id/tvDescriptionGenreName"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvDescriptionAlbumName" />
+
+        <TextView
+            android:id="@+id/tvDescriptionGenreName"
+            style="@style/PlayerTrackInfoDescriptionTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_marginStart="16dp"
+            android:text="@string/genre"
+            app:layout_constraintBottom_toTopOf="@+id/tvDescriptionCountryName"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvDescriptionYearName" />
+
+        <TextView
+            android:id="@+id/tvDescriptionCountryName"
+            style="@style/PlayerTrackInfoDescriptionTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="20dp"
+            android:text="@string/country"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvDescriptionGenreName" />
+
+        <TextView
+            android:id="@+id/tvTrackTime"
+            style="@style/PlayerTrackInfoTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintBottom_toBottomOf="@id/tvDescriptionTrackTime"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tvDescriptionTrackTime"
+            tools:text="5:35" />
+
+        <TextView
+            android:id="@+id/tvAlbumName"
+            style="@style/PlayerTrackInfoTextStyle"
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            android:layout_marginEnd="16dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAlignment="textEnd"
+            app:layout_constraintBottom_toBottomOf="@id/tvDescriptionAlbumName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tvDescriptionAlbumName"
+            app:layout_constraintTop_toTopOf="@id/tvDescriptionAlbumName"
+            tools:text="Yesterday (Remastered 2009)" />
+
+        <TextView
+            android:id="@+id/tvYearName"
+            style="@style/PlayerTrackInfoTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintBottom_toBottomOf="@id/tvDescriptionYearName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tvDescriptionYearName"
+            tools:text="1965" />
+
+        <TextView
+            android:id="@+id/tvGenreName"
+            style="@style/PlayerTrackInfoTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintBottom_toBottomOf="@id/tvDescriptionGenreName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tvDescriptionGenreName"
+            tools:text="Rock" />
+
+        <TextView
+            android:id="@+id/tvCountryName"
+            style="@style/PlayerTrackInfoTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintBottom_toBottomOf="@id/tvDescriptionCountryName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tvDescriptionCountryName"
+            tools:text="Великобритания" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:id="@+id/overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#99000000"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/bottomSheetPlaylists"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bottom_sheet_background"
+        android:elevation="0dp"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="24dp" />
+        app:behavior_hideable="true"
+        app:behavior_peekHeight="500dp"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        tools:visibility="gone">
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/rightBorder"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_end="24dp" />
+        <View
+            android:layout_width="50dp"
+            android:layout_height="4dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bottom_sheet_top_icon" />
 
-    <ImageView
-        android:id="@+id/ivTrackImage"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:contentDescription="@null"
-        android:src="@drawable/placeholder_icon"
-        app:layout_constraintBottom_toTopOf="@id/tvTrackName"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintEnd_toStartOf="@id/rightBorder"
-        app:layout_constraintStart_toEndOf="@id/leftBorder"
-        app:layout_constraintTop_toBottomOf="@id/backButtonPlayerActivity"
-        tools:background="@color/black" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:fontFamily="@font/ys_display_medium"
+            android:gravity="center"
+            android:text="@string/add_to_playlist"
+            android:textColor="@color/theme_color_night"
+            android:textSize="19sp" />
 
-    <TextView
-        android:id="@+id/tvTrackName"
-        style="TextStyle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:ellipsize="end"
-        android:fontFamily="@font/ys_display_medium"
-        android:maxLines="1"
-        android:textSize="22sp"
-        app:layout_constraintBottom_toTopOf="@id/tvArtistName"
-        app:layout_constraintEnd_toStartOf="@+id/rightBorder"
-        app:layout_constraintStart_toEndOf="@id/leftBorder"
-        app:layout_constraintTop_toBottomOf="@id/ivTrackImage"
-        tools:text="Yesterday (Remastered 2009)" />
+        <Button
+            android:id="@+id/addPlaylistButton"
+            style="@style/ActivitySearchButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="28dp"
+            android:clickable="true"
+            android:fontFamily="@font/ys_display_medium"
+            android:text="@string/new_playlist_button" />
 
-    <TextView
-        android:id="@+id/tvArtistName"
-        style="TextStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:ellipsize="end"
-        android:fontFamily="@font/ys_display_medium"
-        android:maxLines="1"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@id/ivPlayButton"
-        app:layout_constraintStart_toEndOf="@id/leftBorder"
-        app:layout_constraintTop_toBottomOf="@id/tvTrackName"
-        tools:text="The Beatles" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvPlaylists"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="24dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/playlist_bottom_sheet_item" />
 
-    <ImageView
-        android:id="@+id/ivPlayButton"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:contentDescription="@null"
-        android:foreground="?attr/selectableItemBackground"
-        android:src="@drawable/play_button_light_theme"
-        android:visibility="visible"
-        app:layout_constraintBottom_toTopOf="@id/tvTrackTimePlay"
-        app:layout_constraintEnd_toStartOf="@id/ivAddToFavoriteButton"
-        app:layout_constraintStart_toEndOf="@id/ivAddToPlaylistButton"
-        app:layout_constraintTop_toBottomOf="@id/tvArtistName" />
+    </LinearLayout>
 
-    <ImageView
-        android:id="@+id/ivPauseButton"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:contentDescription="@null"
-        android:foreground="?attr/selectableItemBackground"
-        android:src="@drawable/pause_button_light_theme"
-        android:visibility="invisible"
-        app:layout_constraintTop_toTopOf="@+id/ivPlayButton"
-        app:layout_constraintStart_toStartOf="@+id/ivPlayButton"
-        app:layout_constraintBottom_toBottomOf="@id/ivPlayButton"
-        app:layout_constraintEnd_toEndOf="@id/ivPlayButton"/>
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/playlistBottomSheetFragmentContainerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_anchor="@+id/constraintLayout"
+        app:layout_anchorGravity="center" />
 
-
-    <ImageView
-        android:id="@+id/ivAddToPlaylistButton"
-        android:layout_width="51dp"
-        android:layout_height="51dp"
-        android:contentDescription="@null"
-        android:foreground="?attr/selectableItemBackground"
-        android:src="@drawable/add_to_playlist_icon"
-        app:layout_constraintBottom_toBottomOf="@id/ivPlayButton"
-        app:layout_constraintEnd_toStartOf="@id/ivPlayButton"
-        app:layout_constraintHorizontal_chainStyle="spread_inside"
-        app:layout_constraintStart_toEndOf="@id/leftBorder"
-        app:layout_constraintTop_toTopOf="@id/ivPlayButton" />
-
-    <ImageView
-        android:id="@+id/ivAddToFavoriteButton"
-        android:layout_width="51dp"
-        android:layout_height="51dp"
-        android:contentDescription="@null"
-        android:foreground="?attr/selectableItemBackground"
-        android:src="@drawable/add_to_favorite_icon"
-        app:layout_constraintBottom_toBottomOf="@id/ivPlayButton"
-        app:layout_constraintEnd_toStartOf="@id/rightBorder"
-        app:layout_constraintStart_toEndOf="@id/ivPlayButton"
-        app:layout_constraintTop_toTopOf="@id/ivPlayButton" />
-
-    <TextView
-        android:id="@+id/tvTrackTimePlay"
-        style="TextStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:fontFamily="@font/ys_display_medium"
-        android:text="@string/default_track_time"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@id/tvDescriptionTrackTime"
-        app:layout_constraintEnd_toStartOf="@id/rightBorder"
-        app:layout_constraintStart_toEndOf="@id/leftBorder"
-        app:layout_constraintTop_toBottomOf="@id/ivPlayButton" />
-
-
-    <TextView
-        android:id="@+id/tvDescriptionTrackTime"
-        style="@style/PlayerTrackInfoDescriptionTextStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="32dp"
-        android:layout_marginStart="16dp"
-        android:text="@string/track_time"
-        app:layout_constraintBottom_toTopOf="@+id/tvDescriptionAlbumName"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvTrackTimePlay" />
-
-    <TextView
-        android:id="@+id/tvDescriptionAlbumName"
-        style="@style/PlayerTrackInfoDescriptionTextStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="32dp"
-        android:layout_marginStart="16dp"
-        android:text="@string/album"
-        app:layout_constraintBottom_toTopOf="@+id/tvDescriptionYearName"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvDescriptionTrackTime" />
-
-    <TextView
-        android:id="@+id/tvDescriptionYearName"
-        style="@style/PlayerTrackInfoDescriptionTextStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="32dp"
-        android:layout_marginStart="16dp"
-        android:text="@string/year"
-        app:layout_constraintBottom_toTopOf="@+id/tvDescriptionGenreName"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvDescriptionAlbumName" />
-
-    <TextView
-        android:id="@+id/tvDescriptionGenreName"
-        style="@style/PlayerTrackInfoDescriptionTextStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="32dp"
-        android:layout_marginStart="16dp"
-        android:text="@string/genre"
-        app:layout_constraintBottom_toTopOf="@+id/tvDescriptionCountryName"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvDescriptionYearName" />
-
-    <TextView
-        android:id="@+id/tvDescriptionCountryName"
-        style="@style/PlayerTrackInfoDescriptionTextStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="32dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginBottom="20dp"
-        android:text="@string/country"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvDescriptionGenreName" />
-
-    <TextView
-        android:id="@+id/tvTrackTime"
-        style="@style/PlayerTrackInfoTextStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="32dp"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintBottom_toBottomOf="@id/tvDescriptionTrackTime"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tvDescriptionTrackTime"
-        tools:text="5:35" />
-
-    <TextView
-        android:id="@+id/tvAlbumName"
-        style="@style/PlayerTrackInfoTextStyle"
-        android:layout_width="0dp"
-        android:layout_height="32dp"
-        android:layout_marginEnd="16dp"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:textAlignment="textEnd"
-        app:layout_constraintBottom_toBottomOf="@id/tvDescriptionAlbumName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/tvDescriptionAlbumName"
-        app:layout_constraintTop_toTopOf="@id/tvDescriptionAlbumName"
-        tools:text="Yesterday (Remastered 2009)" />
-
-    <TextView
-        android:id="@+id/tvYearName"
-        style="@style/PlayerTrackInfoTextStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="32dp"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintBottom_toBottomOf="@id/tvDescriptionYearName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tvDescriptionYearName"
-        tools:text="1965" />
-
-    <TextView
-        android:id="@+id/tvGenreName"
-        style="@style/PlayerTrackInfoTextStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="32dp"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintBottom_toBottomOf="@id/tvDescriptionGenreName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tvDescriptionGenreName"
-        tools:text="Rock" />
-
-    <TextView
-        android:id="@+id/tvCountryName"
-        style="@style/PlayerTrackInfoTextStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="32dp"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintBottom_toBottomOf="@id/tvDescriptionCountryName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tvDescriptionCountryName"
-        tools:text="Великобритания" />
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
