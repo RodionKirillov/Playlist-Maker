@@ -38,13 +38,12 @@ class PlayerViewModel(
 
     fun getPlaylistTracks(playlistId: Long) {
         viewModelScope.launch {
-            playlistInteractor.getPlaylistTracks(playlistId).collect { playlist ->
+            playlistInteractor.getPlaylist(playlistId).collect { playlist ->
                 checkTrackToPlaylist(playlist)
             }
         }
     }
 
-    //            Log.e("CreatePlaylistViewModel999", tracksList.toString())
     private fun checkTrackToPlaylist(playlist: Playlist) {
         if (playlist.trackList.isNotEmpty()) {
             val trackList = createTracksFromJson(playlist.trackList)

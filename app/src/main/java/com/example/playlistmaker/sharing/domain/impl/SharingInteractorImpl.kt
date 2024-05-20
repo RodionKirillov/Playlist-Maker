@@ -1,5 +1,6 @@
 package com.example.playlistmaker.sharing.domain.impl
 
+import com.example.playlistmaker.search.domain.model.Track
 import com.example.playlistmaker.sharing.domain.repository.ExternalNavigator
 import com.example.playlistmaker.sharing.domain.interactor.SharingInteractor
 import com.example.playlistmaker.sharing.domain.model.EmailData
@@ -19,6 +20,14 @@ class SharingInteractorImpl(
         externalNavigator.openEmail(getSupportEmailData())
     }
 
+    override fun sharePlaylist(
+        playlistName: String,
+        playlistDescription: String,
+        trackList: List<Track>
+    ) {
+        externalNavigator.sharePlaylist(playlistName, playlistDescription, trackList)
+    }
+
     private fun getShareAppLink(): String {
         return APP_LINK
     }
@@ -30,7 +39,6 @@ class SharingInteractorImpl(
     private fun getSupportEmailData(): EmailData {
         return EmailData(SUPPORT_EMAIL)
     }
-
 
 
     companion object {
