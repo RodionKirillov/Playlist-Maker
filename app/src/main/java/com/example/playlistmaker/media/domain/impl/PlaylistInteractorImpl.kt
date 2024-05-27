@@ -21,11 +21,25 @@ class PlaylistInteractorImpl(
         return playlistRepository.getPlaylists()
     }
 
-    override suspend fun getPlaylistTracks(playlistId: Long): Flow<Playlist> {
-        return playlistRepository.getPlaylistTracks(playlistId)
+    override suspend fun getPlaylist(playlistId: Long): Flow<Playlist> {
+        return playlistRepository.getPlaylist(playlistId)
     }
 
     override suspend fun updateTrackList(playlistId: Long, trackList: String, trackCount: Int) {
         playlistRepository.updateTrackList(playlistId, trackList, trackCount)
+    }
+
+    override suspend fun updatePlaylist(
+        playlistId: Long,
+        imageUriName: String?,
+        playlistName: String,
+        playlistDescription: String?
+    ) {
+        playlistRepository.updatePlaylist(
+            playlistId,
+            imageUriName,
+            playlistName,
+            playlistDescription
+        )
     }
 }

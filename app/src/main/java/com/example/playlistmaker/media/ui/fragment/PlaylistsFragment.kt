@@ -34,11 +34,6 @@ class PlaylistsFragment : Fragment() {
         return binding.root
     }
 
-    override fun onResume() {
-        super.onResume()
-        viewModel.getPlaylists()
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -49,10 +44,13 @@ class PlaylistsFragment : Fragment() {
         }
 
         binding.addPlaylistButton.setOnClickListener {
-            findNavController().navigate(
-                R.id.action_mediaFragment_to_createPlaylistFragment
-            )
+            findNavController().navigate(R.id.action_mediaFragment_to_createPlaylistFragment)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.getPlaylists()
     }
 
     override fun onDestroyView() {
@@ -66,7 +64,12 @@ class PlaylistsFragment : Fragment() {
         binding.rvPlaylists.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.rvPlaylists.adapter = playlistAdapter
 
-        playlistAdapter?.onPlaylistClickListener = { viewModel.deletePlaylist(it) }
+        playlistAdapter?.onPlaylistClickListener = { playlist ->
+            findNavController().navigate(
+                R.id.action_mediaFragment_to_playlistFragment,
+                PlaylistFragment.createArgs(playlist.playlistId)
+            )
+        }
     }
 
     private fun render(state: PlaylistState) {

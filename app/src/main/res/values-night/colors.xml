@@ -6,4 +6,6 @@
     <color name="theme_color_night">#FFFFFFFF</color>
 
     <color name="theme_color_edittext">#FFFFFFFF</color>
+
+    <color name="playlist_background_color">#E6E8EB</color>
 </resources>

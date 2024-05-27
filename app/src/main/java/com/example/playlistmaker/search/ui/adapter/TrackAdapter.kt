@@ -10,6 +10,7 @@ import com.example.playlistmaker.search.ui.view_holder.TrackViewHolder
 class TrackAdapter : ListAdapter<Track, TrackViewHolder>(TrackItemDiffCallback()) {
 
     var onTrackClickListener: ((Track) -> Unit)? = null
+    var onLongTrackClickListener: ((Track) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         val binding = TrackItemBinding.inflate(
@@ -25,6 +26,11 @@ class TrackAdapter : ListAdapter<Track, TrackViewHolder>(TrackItemDiffCallback()
         holder.bind(item)
         holder.itemView.setOnClickListener {
             onTrackClickListener?.invoke(item)
+        }
+
+        holder.itemView.setOnLongClickListener {
+            onLongTrackClickListener?.invoke(item)
+            true
         }
     }
 }

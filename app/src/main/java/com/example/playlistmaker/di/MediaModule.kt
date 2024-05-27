@@ -13,7 +13,9 @@ import com.example.playlistmaker.media.domain.db.PlaylistRepository
 import com.example.playlistmaker.media.domain.impl.FavoriteInteractorImpl
 import com.example.playlistmaker.media.domain.impl.PlaylistInteractorImpl
 import com.example.playlistmaker.media.ui.view_model.CreatePlaylistViewModel
+import com.example.playlistmaker.media.ui.view_model.EditPlaylistViewModel
 import com.example.playlistmaker.media.ui.view_model.FavoriteTracksViewModel
+import com.example.playlistmaker.media.ui.view_model.PlaylistViewModel
 import com.example.playlistmaker.media.ui.view_model.PlaylistsViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -22,31 +24,62 @@ import org.koin.dsl.module
 val mediaModule = module {
 
     viewModel {
-        FavoriteTracksViewModel(get())
+        FavoriteTracksViewModel(
+            favoriteInteractor = get()
+        )
     }
 
     viewModel {
-        PlaylistsViewModel(get())
+        PlaylistsViewModel(
+            playlistInteractor = get()
+        )
     }
 
     viewModel {
-        CreatePlaylistViewModel(get())
+        CreatePlaylistViewModel(
+            playlistInteractor = get()
+        )
+    }
+
+    viewModel { (playlistId: Long) ->
+        PlaylistViewModel(
+            playlistId = playlistId,
+            playlistInteractor = get(),
+            sharingInteractor = get()
+        )
+    }
+
+    viewModel { (playlistId: Long) ->
+        EditPlaylistViewModel(
+            playlistId = playlistId,
+            playlistInteractor = get()
+        )
     }
 
     single<FavoriteInteractor> {
-        FavoriteInteractorImpl(get())
+        FavoriteInteractorImpl(
+            favoriteRepository = get()
+        )
     }
 
     single<PlaylistInteractor> {
-        PlaylistInteractorImpl(get())
+        PlaylistInteractorImpl(
+            playlistRepository = get()
+        )
     }
 
     single<FavoriteRepository> {
-        FavoriteRepositoryImpl(get(), get())
+        FavoriteRepositoryImpl(
+            appDatabase = get(),
+            trackDbConvertor = get()
+        )
     }
 
     single<PlaylistRepository> {
-        PlaylistRepositoryImpl(get(), get())
+        PlaylistRepositoryImpl(
+            appDatabase = get(),
+            playlistDbConvertor = get()
+        )
     }
 
     factory { PlaylistDbConvertor() }

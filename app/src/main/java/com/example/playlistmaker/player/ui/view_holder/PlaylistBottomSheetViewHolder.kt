@@ -15,7 +15,9 @@ class PlaylistBottomSheetViewHolder(
 
     fun bind(model: Playlist) {
         val count = model.trackCount
-        binding.tvPlaylistCount.text = count.toString().plus(trackCountEnd(count))
+        binding.tvPlaylistCount.text = count.toString()
+            .plus(" ")
+            .plus(trackCountEnd(count))
         binding.tvPlaylistName.text = model.name
 
         if (!model.image.isNullOrEmpty()) {
@@ -26,11 +28,7 @@ class PlaylistBottomSheetViewHolder(
     }
 
     private fun trackCountEnd(countTracks: Int): String {
-        return when {
-            (countTracks % 20) in 10..20 || (countTracks % 10) in 5..9  || (countTracks % 10) == 0 -> " треков"
-            (countTracks % 10) == 1 -> " трек"
-            else -> " трека"
-        }
+        return itemView.resources.getQuantityString(R.plurals.trackCountEnd, countTracks)
     }
 
     private fun loadImageUri(uriImage: String): Uri {

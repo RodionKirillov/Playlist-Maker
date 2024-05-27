@@ -20,9 +20,16 @@ interface PlaylistDao {
     suspend fun getPlaylists(): List<PlaylistEntity>
 
     @Query("SELECT * FROM playlist_table WHERE playlistId = :playlistId")
-    suspend fun getPlaylistTracks(playlistId: Long): PlaylistEntity
+    suspend fun getPlaylist(playlistId: Long): PlaylistEntity
 
     @Query("UPDATE playlist_table SET trackList = :trackList, trackCount =:trackCount WHERE playlistId = :playlistId")
     suspend fun updateTrackList(playlistId: Long, trackList: String, trackCount: Int)
 
+    @Query("UPDATE playlist_table SET image = :imageUriName, name = :playlistName, description = :playlistDescription WHERE playlistId = :playlistId")
+    suspend fun updatePlaylist(
+        playlistId: Long,
+        imageUriName: String?,
+        playlistName: String,
+        playlistDescription: String?
+    )
 }

@@ -3,9 +3,11 @@ package com.example.playlistmaker.player.ui.activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.doOnNextLayout
 import androidx.fragment.app.add
 import androidx.fragment.app.commit
 import androidx.lifecycle.lifecycleScope
@@ -223,12 +225,16 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun initTrackInfo(track: Track) {
-        Glide.with(this)
-            .load(getCoverArtwork(track))
-            .placeholder(R.drawable.placeholder_icon)
-            .centerCrop()
-            .transform(RoundedCorners(dpToPx(8f, this)))
-            .into(binding.ivTrackImage)
+        binding.ivTrackImage.doOnNextLayout {
+            val with = binding.root.width -2 * dpToPx(24f, this)
+            Glide.with(this)
+                .load(getCoverArtwork(track))
+                .placeholder(R.drawable.placeholder_icon)
+                .centerCrop()
+                .override(with, with)
+                .transform(RoundedCorners(dpToPx(8f, this)))
+                .into(binding.ivTrackImage)
+        }
 
         binding.tvTrackName.text = track.trackName
         binding.tvArtistName.text = track.artistName

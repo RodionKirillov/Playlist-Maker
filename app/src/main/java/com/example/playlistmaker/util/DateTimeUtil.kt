@@ -5,6 +5,16 @@ import java.util.Date
 import java.util.Locale
 
 object DateTimeUtil {
+
+    fun playlistTimeFormat(trackList: Int): String {
+        return SimpleDateFormat(
+            "mm",
+            Locale.getDefault()
+        ).format(
+            trackList
+        )
+    }
+
     fun timeFormat(track: Int): String {
         return SimpleDateFormat(
             "mm:ss",

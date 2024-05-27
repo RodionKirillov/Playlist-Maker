@@ -29,12 +29,26 @@ class PlaylistRepositoryImpl(
         emit(playlist)
     }
 
-    override suspend fun getPlaylistTracks(playlistId: Long): Flow<Playlist> = flow {
-        val playlist = appDatabase.playlistDao().getPlaylistTracks(playlistId)
+    override suspend fun getPlaylist(playlistId: Long): Flow<Playlist> = flow {
+        val playlist = appDatabase.playlistDao().getPlaylist(playlistId)
         emit(playlistDbConvertor.map(playlist))
     }
 
     override suspend fun updateTrackList(playlistId: Long, trackList: String, trackCount: Int) {
         appDatabase.playlistDao().updateTrackList(playlistId, trackList, trackCount)
+    }
+
+    override suspend fun updatePlaylist(
+        playlistId: Long,
+        imageUriName: String?,
+        playlistName: String,
+        playlistDescription: String?
+    ) {
+        appDatabase.playlistDao().updatePlaylist(
+            playlistId,
+            imageUriName,
+            playlistName,
+            playlistDescription
+        )
     }
 }
