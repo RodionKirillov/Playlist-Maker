@@ -5,22 +5,19 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.activity.OnBackPressedDispatcher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat.getColor
 import androidx.core.content.ContextCompat.getDrawable
+import androidx.core.view.isVisible
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.replace
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentCreatePlaylistBinding
@@ -60,7 +57,6 @@ class CreatePlaylistFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         binding.materialToolbar.setNavigationOnClickListener { checkShowDialog() }
 
         initTextWatchers()
@@ -83,72 +79,61 @@ class CreatePlaylistFragment : Fragment() {
         activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner, callback)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         _binding = null
         callback.isEnabled = false
     }
 
     private fun initTextWatchers() {
-        val playlistNameTxtWatcher = object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if (!p0.isNullOrEmpty()) {
-                    binding.etPlaylistName.background =
-                        getDrawable(requireContext(), R.drawable.edittext_border_not_empty)
-                    binding.tvPlaylistName.visibility = View.VISIBLE
-                    binding.createPlaylistButton.setBackgroundColor(
-                        getColor(
-                            requireContext(),
-                            R.color.main_background_color
-                        )
+        binding.etPlaylistName.doOnTextChanged { text, _, _, _ ->
+            if (!text.isNullOrEmpty()) {
+                binding.etPlaylistName.background = getDrawable(
+                    requireContext(),
+                    R.drawable.edittext_border_not_empty
+                )
+                binding.tvPlaylistName.isVisible = true
+                binding.createPlaylistButton.setBackgroundColor(
+                    getColor(
+                        requireContext(),
+                        R.color.main_background_color
                     )
+                )
 
-                    playlistName = p0.toString()
-
-                    binding.createPlaylistButton.setOnClickListener {
-                        createPlaylistButton()
-                    }
-
-                } else {
-                    binding.etPlaylistName.background =
-                        getDrawable(requireContext(), R.drawable.edittext_border_empty)
-                    binding.tvPlaylistName.visibility = View.GONE
-                    binding.createPlaylistButton.setBackgroundColor(
-                        getColor(
-                            requireContext(),
-                            R.color.theme_color_edittext
-                        )
+                playlistName = text.toString()
+                binding.createPlaylistButton.setOnClickListener { createPlaylistButton() }
+            } else {
+                binding.etPlaylistName.background = getDrawable(
+                    requireContext(),
+                    R.drawable.edittext_border_empty
+                )
+                binding.tvPlaylistName.isVisible = false
+                binding.createPlaylistButton.setBackgroundColor(
+                    getColor(
+                        requireContext(),
+                        R.color.theme_color_edittext
                     )
-                }
+                )
             }
-
-            override fun afterTextChanged(p0: Editable?) {}
         }
-        binding.etPlaylistName.addTextChangedListener(playlistNameTxtWatcher)
 
-        val playlistDescriptionTxtWatcher = object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+        binding.etDescription.doOnTextChanged { text, _, _, _ ->
+            if (!text.isNullOrEmpty()) {
+                binding.etDescription.background = getDrawable(
+                    requireContext(),
+                    R.drawable.edittext_border_not_empty
+                )
+                binding.tvDescription.isVisible = true
 
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if (!p0.isNullOrEmpty()) {
-                    binding.etDescription.background =
-                        getDrawable(requireContext(), R.drawable.edittext_border_not_empty)
-                    binding.tvDescription.visibility = View.VISIBLE
-
-                    playlistDescription = p0.toString()
-
-                } else {
-                    binding.etDescription.background =
-                        getDrawable(requireContext(), R.drawable.edittext_border_empty)
-                    binding.tvDescription.visibility = View.GONE
-                }
+                playlistDescription = text.toString()
+            } else {
+                binding.etDescription.background = getDrawable(
+                    requireContext(),
+                    R.drawable.edittext_border_empty
+                )
+                binding.tvDescription.isVisible = false
             }
-
-            override fun afterTextChanged(p0: Editable?) {}
         }
-        binding.etDescription.addTextChangedListener(playlistDescriptionTxtWatcher)
     }
 
     private fun createPlaylistButton() {

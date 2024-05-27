@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.net.toUri
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
@@ -23,7 +24,6 @@ import com.example.playlistmaker.util.DateTimeUtil
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import java.io.File
@@ -47,14 +47,17 @@ class PlaylistFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentPlaylistBinding.inflate(layoutInflater, container, false)
-        playlistId = requireArguments().getLong(ARGS_PLAYLIST)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        requireArguments().getLong(ARGS_PLAYLIST).let {
+            playlistId = it
+            viewModel.updatePlaylistInfo(it)
+        }
+
         binding.backButtonPlaylist.setOnClickListener { findNavController().navigateUp() }
-        viewModel.updatePlaylistInfo(playlistId!!)
         setupRecyclerView()
         setupShare()
 
@@ -73,8 +76,8 @@ class PlaylistFragment : Fragment() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         _binding = null
     }
 
@@ -95,11 +98,11 @@ class PlaylistFragment : Fragment() {
 
                 when (newState) {
                     BottomSheetBehavior.STATE_HIDDEN -> {
-                        binding.overlay.visibility = View.GONE
+                        binding.overlay.isVisible = false
                     }
 
                     else -> {
-                        binding.overlay.visibility = View.VISIBLE
+                        binding.overlay.isVisible = true
                     }
                 }
             }
@@ -109,44 +112,50 @@ class PlaylistFragment : Fragment() {
             }
         })
 
-        if (playlist.image == null) {
-            binding.ivBottomSheetImage.setImageResource(R.drawable.placeholder_icon)
-        } else {
-            binding.ivBottomSheetImage.setImageURI(loadImageUri(playlist.image))
-        }
-        binding.tvBottomSheetPlaylistName.text = playlist.name
-        binding.tvBottomSheetPlaylistCount.text = playlist.trackCount.toString()
-            .plus(trackCountEnd(playlist.trackCount))
-
-        binding.tvBottomSheetPlaylistShare.setOnClickListener { sharePlaylist() }
-        binding.tvBottomSheetPlaylistDelete.setOnClickListener {
-            BottomSheetBehavior.from(binding.bottomSheetMenu).apply {
-                state = BottomSheetBehavior.STATE_HIDDEN
+        with(binding) {
+            if (playlist.image == null) {
+                ivBottomSheetImage.setImageResource(R.drawable.placeholder_icon)
+            } else {
+                ivBottomSheetImage.setImageURI(loadImageUri(playlist.image))
             }
+            tvBottomSheetPlaylistName.text = playlist.name
+            tvBottomSheetPlaylistCount.text = playlist.trackCount.toString()
+                .plus(" ")
+                .plus(trackCountEnd(playlist.trackCount))
 
-            MaterialAlertDialogBuilder(requireContext())
-                .setTitle(getString(R.string.delete_plalist))
-                .setMessage(getString(R.string.do_you_want_to_delete_a_playlist))
-                .setNeutralButton(getString(R.string.no)) { _, _ -> }
-                .setNegativeButton(getString(R.string.yes)) { _, _ ->
-                    findNavController().navigateUp()
-                    viewModel.deletePlaylist()
+            tvBottomSheetPlaylistShare.setOnClickListener { sharePlaylist() }
+            tvBottomSheetPlaylistDelete.setOnClickListener {
+                BottomSheetBehavior.from(bottomSheetMenu).apply {
+                    state = BottomSheetBehavior.STATE_HIDDEN
                 }
-                .show()
+
+                MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(getString(R.string.delete_plalist))
+                    .setMessage(getString(R.string.do_you_want_to_delete_a_playlist))
+                    .setNeutralButton(getString(R.string.no)) { _, _ -> }
+                    .setNegativeButton(getString(R.string.yes)) { _, _ ->
+                        findNavController().navigateUp()
+                        viewModel.deletePlaylist()
+                    }
+                    .show()
+            }
+            tvBottomSheetPlaylistEdit.setOnClickListener { launchEditPlaylistFragment(playlist) }
         }
-        binding.tvBottomSheetPlaylistEdit.setOnClickListener { launchEditPlaylistFragment(playlist) }
     }
 
     private fun initPlaylistInfo(playlist: Playlist) {
-        if (playlist.image == null) {
-            binding.ivPlaylistImage.setImageResource(R.drawable.placeholder_icon)
-        } else {
-            binding.ivPlaylistImage.setImageURI(loadImageUri(playlist.image))
+        with(binding) {
+            if (playlist.image == null) {
+                ivPlaylistImage.setImageResource(R.drawable.placeholder_icon)
+            } else {
+                ivPlaylistImage.setImageURI(loadImageUri(playlist.image))
+            }
+            tvPlaylistName.text = playlist.name
+            tvPlaylistDescription.text = playlist.description
+            tvPlaylistTrackCount.text = playlist.trackCount.toString()
+                .plus(" ")
+                .plus(trackCountEnd(playlist.trackCount))
         }
-        binding.tvPlaylistName.text = playlist.name
-        binding.tvPlaylistDescription.text = playlist.description
-        binding.tvPlaylistTrackCount.text = playlist.trackCount.toString()
-            .plus(trackCountEnd(playlist.trackCount))
     }
 
     private fun launchEditPlaylistFragment(playlist: Playlist) {
@@ -185,7 +194,7 @@ class PlaylistFragment : Fragment() {
             .setMessage(getString(R.string.message_dialog))
             .setNeutralButton(getString(R.string.cancel_dialog)) { _, _ -> }
             .setNegativeButton(getString(R.string.delete)) { _, _ ->
-                viewModel.deleteTrackFromPlaylist(track, trackAdapter!!.currentList.reversed())
+                viewModel.deleteTrackFromPlaylist(track, trackAdapter!!.currentList)
             }
             .show()
     }
@@ -209,11 +218,7 @@ class PlaylistFragment : Fragment() {
     }
 
     private fun trackCountEnd(countTracks: Int): String {
-        return when {
-            (countTracks % 20) in 10..20 || (countTracks % 10) in 5..9 || (countTracks % 10) == 0 -> " треков"
-            (countTracks % 10) == 1 -> " трек"
-            else -> " трека"
-        }
+        return requireContext().resources.getQuantityString(R.plurals.trackCountEnd, countTracks)
     }
 
     private fun loadImageUri(uriImage: String): Uri {

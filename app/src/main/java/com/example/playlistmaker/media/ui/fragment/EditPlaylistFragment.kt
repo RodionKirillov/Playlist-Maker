@@ -5,8 +5,6 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +14,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
@@ -32,7 +32,9 @@ import java.util.Date
 class EditPlaylistFragment : Fragment() {
 
     private var playlistId: Long? = null
-
+    private var imageUriName: String? = null
+    private var playlistName: String? = null
+    private var playlistDescription: String? = null
     private var _binding: FragmentEditPlaylistBinding? = null
 
     private val binding get() = _binding!!
@@ -41,23 +43,22 @@ class EditPlaylistFragment : Fragment() {
         parametersOf(playlistId)
     }
 
-    private var imageUriName: String? = null
-    private var playlistName: String? = null
-    private var playlistDescription: String? = null
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentEditPlaylistBinding.inflate(layoutInflater, container, false)
-        playlistId = requireArguments().getLong(ARGS_EDIT_PLAYLIST)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.getPlaylist(playlistId!!)
+        requireArguments().getLong(ARGS_EDIT_PLAYLIST).let {
+            playlistId = it
+            viewModel.getPlaylist(it)
+        }
+
         initTextWatchers()
 
         viewModel.getPlaylistInfo.observe(viewLifecycleOwner) { playlist ->
@@ -78,13 +79,12 @@ class EditPlaylistFragment : Fragment() {
         binding.playlistImage.setOnClickListener {
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
-        binding.materialToolbar.setNavigationOnClickListener { findNavController().navigateUp() }
 
-        binding.editPlaylistButton.setOnClickListener { saveEditPlaylist() }
+        binding.materialToolbar.setNavigationOnClickListener { findNavController().navigateUp() }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         _binding = null
     }
 
@@ -100,30 +100,29 @@ class EditPlaylistFragment : Fragment() {
     }
 
     private fun initTextWatchers() {
-        val playlistNameTxtWatcher = object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if (!p0.isNullOrEmpty()) {
-                    binding.etPlaylistName.background = ContextCompat.getDrawable(
+        with(binding) {
+            etPlaylistName.doOnTextChanged { text, _, _, _ ->
+                if (!text.isNullOrEmpty()) {
+                    etPlaylistName.background = ContextCompat.getDrawable(
                         requireContext(),
                         R.drawable.edittext_border_not_empty
                     )
-                    binding.tvPlaylistName.visibility = View.VISIBLE
-                    binding.editPlaylistButton.setBackgroundColor(
+                    tvPlaylistName.isVisible = true
+                    editPlaylistButton.setBackgroundColor(
                         ContextCompat.getColor(
                             requireContext(),
                             R.color.main_background_color
                         )
                     )
-                    playlistName = p0.toString()
+                    playlistName = text.toString()
+                    editPlaylistButton.setOnClickListener { saveEditPlaylist() }
                 } else {
-                    binding.etPlaylistName.background = ContextCompat.getDrawable(
+                    etPlaylistName.background = ContextCompat.getDrawable(
                         requireContext(),
                         R.drawable.edittext_border_empty
                     )
-                    binding.tvPlaylistName.visibility = View.GONE
-                    binding.editPlaylistButton.setBackgroundColor(
+                    tvPlaylistName.isVisible = false
+                    editPlaylistButton.setBackgroundColor(
                         ContextCompat.getColor(
                             requireContext(),
                             R.color.theme_color_edittext
@@ -133,35 +132,25 @@ class EditPlaylistFragment : Fragment() {
                 }
             }
 
-            override fun afterTextChanged(p0: Editable?) {}
-        }
-        binding.etPlaylistName.addTextChangedListener(playlistNameTxtWatcher)
-
-        val playlistDescriptionTxtWatcher = object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if (!p0.isNullOrEmpty()) {
-                    binding.etDescription.background = ContextCompat.getDrawable(
+            etDescription.doOnTextChanged { text, _, _, _ ->
+                if (!text.isNullOrEmpty()) {
+                    etDescription.background = ContextCompat.getDrawable(
                         requireContext(),
                         R.drawable.edittext_border_not_empty
                     )
-                    binding.tvDescription.visibility = View.VISIBLE
+                    tvDescription.isVisible = true
 
-                    playlistDescription = p0.toString()
+                    playlistDescription = text.toString()
                 } else {
-                    binding.etDescription.background = ContextCompat.getDrawable(
+                    etDescription.background = ContextCompat.getDrawable(
                         requireContext(),
                         R.drawable.edittext_border_empty
                     )
-                    binding.tvDescription.visibility = View.GONE
+                    tvDescription.isVisible = false
                     playlistDescription = null
                 }
             }
-
-            override fun afterTextChanged(p0: Editable?) {}
         }
-        binding.etDescription.addTextChangedListener(playlistDescriptionTxtWatcher)
     }
 
     private fun saveEditPlaylist() {

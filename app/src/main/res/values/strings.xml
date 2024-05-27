@@ -54,4 +54,13 @@
     <string name="message_dialog">Вы уверены, что хотите удалить трек из плейлиста?</string>
     <string name="cancel_dialog">Отмена</string>
     <string name="delete">Удалить</string>
+    
+    <plurals name="trackCountEnd">
+        <item quantity="one">трек</item>
+        <item quantity="two">трека</item>
+        <item quantity="few">трека</item>
+        <item quantity="many">треков</item>
+        <item quantity="other">треков</item>
+    </plurals>
+
 </resources>

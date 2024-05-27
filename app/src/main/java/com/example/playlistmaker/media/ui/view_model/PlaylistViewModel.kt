@@ -43,7 +43,7 @@ class PlaylistViewModel(
         viewModelScope.launch {
             playlistInteractor.updateTrackList(
                 playlistId,
-                createJsonFromTrack(list.reversed()),
+                createJsonFromTrack(list),
                 list.size
             )
             updatePlaylistInfo(playlistId)
@@ -69,7 +69,7 @@ class PlaylistViewModel(
         return Gson().fromJson(json, type)
     }
 
-    private fun createJsonFromTrack(tracksList: List<Track>): String { // TODO много повторений этого метода
+    private fun createJsonFromTrack(tracksList: List<Track>): String {
         return Gson().toJson(tracksList)
     }
 }

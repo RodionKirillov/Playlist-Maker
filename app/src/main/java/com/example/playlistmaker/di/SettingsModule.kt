@@ -16,19 +16,28 @@ import org.koin.dsl.module
 val settingsModule = module {
 
     viewModel {
-        SettingsViewModel(get(), get())
+        SettingsViewModel(
+            sharingInteractor = get(),
+            settingsInteractor = get()
+        )
     }
 
     single<SettingsInteractor> {
-        SettingsInteractorImpl(get())
+        SettingsInteractorImpl(
+            settingsRepository = get()
+        )
     }
 
     single<SettingsRepository> {
-        SettingsRepositoryImpl(get())
+        SettingsRepositoryImpl(
+            themeMemory = get()
+        )
     }
 
     single<ThemeMemory> {
-        SharedPreferencesThemeMemory(get())
+        SharedPreferencesThemeMemory(
+            sharedPrefs = get()
+        )
     }
 
     single {

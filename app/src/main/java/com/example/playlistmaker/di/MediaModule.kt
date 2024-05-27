@@ -24,39 +24,62 @@ import org.koin.dsl.module
 val mediaModule = module {
 
     viewModel {
-        FavoriteTracksViewModel(get())
+        FavoriteTracksViewModel(
+            favoriteInteractor = get()
+        )
     }
 
     viewModel {
-        PlaylistsViewModel(get())
+        PlaylistsViewModel(
+            playlistInteractor = get()
+        )
     }
 
     viewModel {
-        CreatePlaylistViewModel(get())
+        CreatePlaylistViewModel(
+            playlistInteractor = get()
+        )
     }
 
     viewModel { (playlistId: Long) ->
-        PlaylistViewModel(playlistId, get(), get())
+        PlaylistViewModel(
+            playlistId = playlistId,
+            playlistInteractor = get(),
+            sharingInteractor = get()
+        )
     }
 
     viewModel { (playlistId: Long) ->
-        EditPlaylistViewModel(playlistId, get())
+        EditPlaylistViewModel(
+            playlistId = playlistId,
+            playlistInteractor = get()
+        )
     }
 
     single<FavoriteInteractor> {
-        FavoriteInteractorImpl(get())
+        FavoriteInteractorImpl(
+            favoriteRepository = get()
+        )
     }
 
     single<PlaylistInteractor> {
-        PlaylistInteractorImpl(get())
+        PlaylistInteractorImpl(
+            playlistRepository = get()
+        )
     }
 
     single<FavoriteRepository> {
-        FavoriteRepositoryImpl(get(), get())
+        FavoriteRepositoryImpl(
+            appDatabase = get(),
+            trackDbConvertor = get()
+        )
     }
 
     single<PlaylistRepository> {
-        PlaylistRepositoryImpl(get(), get())
+        PlaylistRepositoryImpl(
+            appDatabase = get(),
+            playlistDbConvertor = get()
+        )
     }
 
     factory { PlaylistDbConvertor() }

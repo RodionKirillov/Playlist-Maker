@@ -20,19 +20,28 @@ import retrofit2.converter.gson.GsonConverterFactory
 val searchModule = module {
 
     viewModel {
-        SearchViewModel(get())
+        SearchViewModel(
+            searchInteractor = get()
+        )
     }
 
     single<TracksInteractor> {
-        TracksInteractorImpl(get())
+        TracksInteractorImpl(
+            repository = get()
+        )
     }
 
     single<TrackRepository> {
-        TrackRepositoryImpl(get(), get())
+        TrackRepositoryImpl(
+            networkClient = get(),
+            memoryClient = get()
+        )
     }
 
     single<NetworkClient> {
-        RetrofitNetworkClient(get())
+        RetrofitNetworkClient(
+            iTunesSearchAPI = get()
+        )
     }
 
     single<ITunesSearchAPI> {
@@ -44,7 +53,9 @@ val searchModule = module {
     }
 
     single<MemoryClient> {
-        SharedPreferencesMemoryClient(get())
+        SharedPreferencesMemoryClient(
+            sharedPrefsHistory = get()
+        )
     }
 
     single {
