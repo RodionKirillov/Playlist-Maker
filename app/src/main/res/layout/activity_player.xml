@@ -98,20 +98,6 @@
             app:layout_constraintTop_toBottomOf="@id/tvArtistName" />
 
         <ImageView
-            android:id="@+id/ivPauseButton"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:contentDescription="@null"
-            android:foreground="?attr/selectableItemBackground"
-            android:src="@drawable/pause_button_light_theme"
-            android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="@id/ivPlayButton"
-            app:layout_constraintEnd_toEndOf="@id/ivPlayButton"
-            app:layout_constraintStart_toStartOf="@+id/ivPlayButton"
-            app:layout_constraintTop_toTopOf="@+id/ivPlayButton" />
-
-
-        <ImageView
             android:id="@+id/ivAddToPlaylistButton"
             android:layout_width="51dp"
             android:layout_height="51dp"
