@@ -1,39 +1,37 @@
 package com.example.playlistmaker.player.domain.impl
 
-import com.example.playlistmaker.player.data.impl.PlayerRepositoryImpl
 import com.example.playlistmaker.player.domain.interactor.PlayerInteractor
 import com.example.playlistmaker.player.domain.repository.PlayerRepository
-import com.example.playlistmaker.search.domain.model.Track
 
 class PlayerInteractorImpl(
     private val playerRepository: PlayerRepository
 ) : PlayerInteractor {
 
-    override fun preparePlaying(
-        track: Track,
-        onPreparedListener: PlayerRepositoryImpl.OnPreparedListener,
-        onCompletionListener: PlayerRepositoryImpl.OnCompletionListener
-    ) {
-        playerRepository.preparePlaying(
-            track,
-            onPreparedListener,
-            onCompletionListener
-        )
+    override fun setDataSource(trackUrl: String) {
+        playerRepository.setDataSource(trackUrl)
     }
 
-    override fun startPlaying() {
-        playerRepository.startPlaying()
+    override fun preparePlaying(onPrepared: () -> Unit) {
+        playerRepository.preparePlaying(onPrepared)
     }
 
-    override fun pausePlaying() {
-        playerRepository.pausePlaying()
+    override fun onCompletionPlaying(onCompletion: () -> Unit) {
+        playerRepository.onCompletionPlaying(onCompletion)
     }
 
-    override fun releasePlaying() {
-        playerRepository.releasePlaying()
+    override fun startPlayer() {
+        playerRepository.startPlayer()
     }
 
-    override fun getCurrentPositionPlaying(): Long {
-        return playerRepository.getCurrentPositionPlaying()
+    override fun pausePlayer() {
+        playerRepository.pausePlayer()
+    }
+
+    override fun releasePlayer() {
+        playerRepository.releasePlayer()
+    }
+
+    override fun getCurrentPositionPlayer(): Int {
+        return playerRepository.getCurrentPositionPlayer()
     }
 }
