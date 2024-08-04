@@ -1,22 +1,18 @@
 package com.example.playlistmaker.player.domain.repository
 
-import com.example.playlistmaker.player.data.impl.PlayerRepositoryImpl
-import com.example.playlistmaker.search.domain.model.Track
-
 interface PlayerRepository {
 
-    fun preparePlaying(
-        track: Track,
-        onPreparedListener: PlayerRepositoryImpl.OnPreparedListener,
-        onCompletionListener: PlayerRepositoryImpl.OnCompletionListener
-    )
+    fun setDataSource(trackUrl: String)
 
-    fun startPlaying()
+    fun preparePlaying(onPrepared: () -> Unit)
 
-    fun pausePlaying()
+    fun onCompletionPlaying(onCompletion: () -> Unit)
 
-    fun releasePlaying()
+    fun startPlayer()
 
-    fun getCurrentPositionPlaying(): Long
+    fun pausePlayer()
 
+    fun releasePlayer()
+
+    fun getCurrentPositionPlayer(): Int
 }

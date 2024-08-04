@@ -2,48 +2,41 @@ package com.example.playlistmaker.player.data.impl
 
 import android.media.MediaPlayer
 import com.example.playlistmaker.player.domain.repository.PlayerRepository
-import com.example.playlistmaker.search.domain.model.Track
 
 class PlayerRepositoryImpl(
     private val mediaPlayer: MediaPlayer
 ) : PlayerRepository {
 
-    override fun preparePlaying(
-        track: Track,
-        onPreparedListener: OnPreparedListener,
-        onCompletionListener: OnCompletionListener
-    ) {
-        mediaPlayer.setDataSource(track.previewUrl)
+    override fun setDataSource(trackUrl: String) {
+        mediaPlayer.setDataSource(trackUrl)
+    }
+
+    override fun preparePlaying(onPrepared: () -> Unit) {
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {
-            onPreparedListener.setOnPreparedListener()
-        }
-        mediaPlayer.setOnCompletionListener {
-            onCompletionListener.setOnCompletionListener()
+            onPrepared.invoke()
         }
     }
 
-    override fun startPlaying() {
+    override fun onCompletionPlaying(onCompletion: () -> Unit) {
+        mediaPlayer.setOnCompletionListener {
+            onCompletion.invoke()
+        }
+    }
+
+    override fun startPlayer() {
         mediaPlayer.start()
     }
 
-    override fun pausePlaying() {
+    override fun pausePlayer() {
         mediaPlayer.pause()
     }
 
-    override fun releasePlaying() {
+    override fun releasePlayer() {
         mediaPlayer.release()
     }
 
-    override fun getCurrentPositionPlaying(): Long {
-        return mediaPlayer.currentPosition.toLong()
-    }
-
-    interface OnPreparedListener {
-        fun setOnPreparedListener()
-    }
-
-    interface OnCompletionListener {
-        fun setOnCompletionListener()
+    override fun getCurrentPositionPlayer(): Int {
+        return mediaPlayer.currentPosition
     }
 }
