@@ -50,7 +50,7 @@ class TrackRepositoryImpl(
         historyTack.removeAll { it.trackId == track.trackId }
         historyTack.add(0, track)
 
-        if (historyTack.size > maxHistory) historyTack.removeAt(historyTack.size - 1)
+        if (historyTack.size > MAX_HISTORY_SIZE) historyTack.removeAt(historyTack.size - 1)
 
         memoryClient.addSearchHistory(converter.createTrackDtoFromTrack(historyTack))
     }
@@ -60,6 +60,6 @@ class TrackRepositoryImpl(
     }
 
     companion object {
-        private const val maxHistory = 10
+        private const val MAX_HISTORY_SIZE = 10
     }
 }
