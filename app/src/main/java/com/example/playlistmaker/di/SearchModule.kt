@@ -1,8 +1,9 @@
 package com.example.playlistmaker.di
 
 import android.content.Context
-import com.example.playlistmaker.search.data.MemoryClient
-import com.example.playlistmaker.search.data.NetworkClient
+import com.example.playlistmaker.search.data.converters.SearchDtoConverter
+import com.example.playlistmaker.search.data.source.MemoryClient
+import com.example.playlistmaker.search.data.source.NetworkClient
 import com.example.playlistmaker.search.domain.repository.TrackRepository
 import com.example.playlistmaker.search.data.impl.TrackRepositoryImpl
 import com.example.playlistmaker.search.data.memory.SharedPreferencesMemoryClient
@@ -34,7 +35,8 @@ val searchModule = module {
     single<TrackRepository> {
         TrackRepositoryImpl(
             networkClient = get(),
-            memoryClient = get()
+            memoryClient = get(),
+            converter = get()
         )
     }
 
@@ -57,6 +59,8 @@ val searchModule = module {
             sharedPrefsHistory = get()
         )
     }
+
+    factory { SearchDtoConverter() }
 
     single {
         androidContext().getSharedPreferences(
