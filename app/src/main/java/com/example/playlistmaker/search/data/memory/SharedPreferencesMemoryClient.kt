@@ -1,7 +1,7 @@
 package com.example.playlistmaker.search.data.memory
 
 import android.content.SharedPreferences
-import com.example.playlistmaker.search.data.MemoryClient
+import com.example.playlistmaker.search.data.source.MemoryClient
 import com.example.playlistmaker.search.data.dto.TrackDto
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
