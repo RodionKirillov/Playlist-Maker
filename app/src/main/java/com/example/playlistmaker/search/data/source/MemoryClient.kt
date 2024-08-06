@@ -1,4 +1,4 @@
-package com.example.playlistmaker.search.data
+package com.example.playlistmaker.search.data.source
 
 import com.example.playlistmaker.search.data.dto.TrackDto
 
