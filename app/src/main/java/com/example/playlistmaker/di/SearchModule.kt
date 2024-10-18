@@ -36,7 +36,7 @@ val searchModule = module {
         TrackRepositoryImpl(
             networkClient = get(),
             memoryClient = get(),
-            converter = get()
+            mapper = get()
         )
     }
 

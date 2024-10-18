@@ -4,26 +4,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.databinding.FragmentMediaBinding
-import com.example.playlistmaker.media.ui.fragment.MediaViewPagerAdapter
+import com.example.playlistmaker.media.ui.adapter.MediaViewPagerAdapter
+import com.example.playlistmaker.util.BindingFragment
 import com.google.android.material.tabs.TabLayoutMediator
 
-class MediaFragment : Fragment() {
-
-    private var _binding: FragmentMediaBinding? = null
-    private val binding get() = _binding!!
+class MediaFragment : BindingFragment<FragmentMediaBinding>() {
 
     private lateinit var tabMediator: TabLayoutMediator
 
-    override fun onCreateView(
+    override fun createBinding(
         inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentMediaBinding.inflate(layoutInflater)
-        return binding.root
+        container: ViewGroup?
+    ): FragmentMediaBinding {
+        return FragmentMediaBinding.inflate(inflater, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -42,7 +36,6 @@ class MediaFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
         tabMediator.detach()
     }
 }

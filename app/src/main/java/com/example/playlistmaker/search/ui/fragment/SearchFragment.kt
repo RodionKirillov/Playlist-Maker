@@ -8,64 +8,47 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.player.ui.activity.PlayerActivity
 import com.example.playlistmaker.search.domain.model.Track
 import com.example.playlistmaker.search.ui.adapter.TrackAdapter
 import com.example.playlistmaker.search.ui.model.SearchState
 import com.example.playlistmaker.search.ui.view_model.SearchViewModel
+import com.example.playlistmaker.util.BindingFragment
 import com.google.gson.Gson
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchFragment : Fragment() {
+class SearchFragment : BindingFragment<FragmentSearchBinding>() {
 
     private lateinit var searchAdapter: TrackAdapter
     private lateinit var historyAdapter: TrackAdapter
 
     private val searchViewModel: SearchViewModel by viewModel()
 
-    private var isClickAllowed = true
     private var editTextFocus = false
     private var stringEditText = ""
-    private var _binding: FragmentSearchBinding? = null
-    private val binding get() = _binding!!
-    override fun onCreateView(
+
+    override fun createBinding(
         inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentSearchBinding.inflate(layoutInflater)
-        return binding.root
+        container: ViewGroup?
+    ): FragmentSearchBinding {
+        return FragmentSearchBinding.inflate(inflater, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         searchViewModel.observeState().observe(viewLifecycleOwner) { render(it) }
         setupRecyclerView()
-
-        binding.bCleanHistory.setOnClickListener {
-            clearHistoryButtonClicked()
-        }
+        setupOnClickListeners()
+        setupTextChangeListener()
 
         binding.etSearch.setOnFocusChangeListener { _, hasFocus ->
             editTextFocus = hasFocus
             binding.svHistoryTrack.visibility = historyVisibility(hasFocus)
         }
+    }
 
-        binding.ivClearIcon.setOnClickListener {
-            binding.etSearch.setText("")
-            searchViewModel.showHistory()
-
-            val inputMethodManager =
-                requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-            inputMethodManager?.hideSoftInputFromWindow(requireView().windowToken, 0)
-        }
-
-
+    private fun setupTextChangeListener() {
         val searchTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
@@ -81,14 +64,24 @@ class SearchFragment : Fragment() {
             override fun afterTextChanged(p0: Editable?) {}
         }
         binding.etSearch.addTextChangedListener(searchTextWatcher)
+    }
 
+    private fun setupOnClickListeners() {
+        binding.bCleanHistory.setOnClickListener {
+            clearHistoryButtonClicked()
+        }
+
+        binding.ivClearIcon.setOnClickListener {
+            binding.etSearch.setText("")
+            searchViewModel.showHistory()
+
+            val inputMethodManager =
+                requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            inputMethodManager?.hideSoftInputFromWindow(requireView().windowToken, 0)
+        }
 
         binding.bRefresh.setOnClickListener {
             searchViewModel.searchRequest(stringEditText)
-        }
-
-        if (savedInstanceState != null) {
-            binding.etSearch.setText(savedInstanceState.getString(STRING_EDIT_TEXT))
         }
     }
 
@@ -116,23 +109,6 @@ class SearchFragment : Fragment() {
 
             historyAdapter.submitList(getHistoryTracks())
         }
-    }
-
-    private fun clickDebounce(): Boolean {
-        val current = isClickAllowed
-        if (isClickAllowed) {
-            isClickAllowed = false
-            viewLifecycleOwner.lifecycleScope.launch {
-                delay(CLICK_DEBOUNCE_DELAY_MILLIS)
-                isClickAllowed = true
-            }
-        }
-        return current
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString(STRING_EDIT_TEXT, stringEditText)
     }
 
     private fun clearHistoryButtonClicked() {
@@ -211,15 +187,5 @@ class SearchFragment : Fragment() {
         binding.pbLoading.visibility = View.GONE
 
         searchAdapter.submitList(tracks)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
-    companion object {
-        private const val STRING_EDIT_TEXT = "STRING_EDIT_TEXT"
-        private const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
     }
 }
