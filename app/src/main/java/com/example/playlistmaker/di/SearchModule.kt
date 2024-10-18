@@ -1,7 +1,7 @@
 package com.example.playlistmaker.di
 
 import android.content.Context
-import com.example.playlistmaker.search.data.converters.SearchDtoConverter
+import com.example.playlistmaker.search.data.mappers.SearchMappers
 import com.example.playlistmaker.search.data.source.MemoryClient
 import com.example.playlistmaker.search.data.source.NetworkClient
 import com.example.playlistmaker.search.domain.repository.TrackRepository
@@ -60,7 +60,7 @@ val searchModule = module {
         )
     }
 
-    factory { SearchDtoConverter() }
+    factory { SearchMappers() }
 
     single {
         androidContext().getSharedPreferences(
