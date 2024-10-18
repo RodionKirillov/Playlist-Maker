@@ -1,8 +1,8 @@
 package com.example.playlistmaker.search.data.memory
 
 import android.content.SharedPreferences
-import com.example.playlistmaker.search.data.MemoryClient
 import com.example.playlistmaker.search.data.dto.TrackDto
+import com.example.playlistmaker.search.data.source.MemoryClient
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
@@ -10,9 +10,15 @@ class SharedPreferencesMemoryClient(
     private val sharedPrefsHistory: SharedPreferences
 ) : MemoryClient {
 
-    override fun addSearchHistory(trackArray: List<TrackDto>) {
+    override fun addSearchHistory(track: TrackDto) {
+        val historyTack = getSearchHistory().toMutableList()
+        historyTack.removeAll { it.trackId == track.trackId }
+        historyTack.add(0, track)
+
+        if (historyTack.size > MAX_HISTORY_SIZE) historyTack.removeAt(historyTack.size - 1)
+
         sharedPrefsHistory.edit()
-            .putString(SHARED_PREFS_HISTORY_KEY, createJsonFromTrack(trackArray))
+            .putString(SHARED_PREFS_HISTORY_KEY, createJsonFromTrack(historyTack))
             .apply()
     }
 
@@ -36,8 +42,10 @@ class SharedPreferencesMemoryClient(
     }
 
     companion object {
-        const val SHARED_PREFS_HISTORY_KEY = "SHARED_PREFS_HISTORY_KEY"
         const val SHARED_PREFS_HISTORY = "SHARED_PREFS_HISTORY"
+
+        private const val SHARED_PREFS_HISTORY_KEY = "SHARED_PREFS_HISTORY_KEY"
+        private const val MAX_HISTORY_SIZE = 10
     }
 }
 

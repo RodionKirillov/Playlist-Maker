@@ -1,10 +1,10 @@
-package com.example.playlistmaker.search.data
+package com.example.playlistmaker.search.data.source
 
 import com.example.playlistmaker.search.data.dto.TrackDto
 
 interface MemoryClient {
 
-    fun addSearchHistory(trackArray: List<TrackDto>)
+    fun addSearchHistory(track: TrackDto)
 
     fun getSearchHistory(): List<TrackDto>
 

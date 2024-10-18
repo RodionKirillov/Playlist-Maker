@@ -3,7 +3,6 @@ package com.example.playlistmaker.media.ui.fragment
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +10,6 @@ import android.widget.Toast
 import androidx.core.net.toUri
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlaylistBinding
@@ -20,6 +18,7 @@ import com.example.playlistmaker.media.ui.view_model.PlaylistViewModel
 import com.example.playlistmaker.player.ui.activity.PlayerActivity
 import com.example.playlistmaker.search.domain.model.Track
 import com.example.playlistmaker.search.ui.adapter.TrackAdapter
+import com.example.playlistmaker.util.BindingFragment
 import com.example.playlistmaker.util.DateTimeUtil
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -28,26 +27,21 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import java.io.File
 
-class PlaylistFragment : Fragment() {
+class PlaylistFragment : BindingFragment<FragmentPlaylistBinding>() {
 
     private var playlistId: Long? = null
 
-    private var trackAdapter: TrackAdapter? = null
-
-    private var _binding: FragmentPlaylistBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var trackAdapter: TrackAdapter
 
     private val viewModel: PlaylistViewModel by viewModel() {
         parametersOf(playlistId)
     }
 
-    override fun onCreateView(
+    override fun createBinding(
         inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentPlaylistBinding.inflate(layoutInflater, container, false)
-        return binding.root
+        container: ViewGroup?
+    ): FragmentPlaylistBinding {
+        return FragmentPlaylistBinding.inflate(inflater, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -72,13 +66,8 @@ class PlaylistFragment : Fragment() {
 
         viewModel.getTrackList.observe(viewLifecycleOwner) { trackList ->
             binding.tvPlaylistDuration.text = getDurationPlaylist(trackList).plus(" минут")
-            trackAdapter?.submitList(trackList)
+            trackAdapter.submitList(trackList)
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     private fun setupBottomSheetMenu(playlist: Playlist) {
@@ -168,8 +157,8 @@ class PlaylistFragment : Fragment() {
     private fun setupRecyclerView() {
         trackAdapter = TrackAdapter()
         binding.rvTracks.adapter = trackAdapter
-        trackAdapter?.onTrackClickListener = { launchPlayerActivity(it) }
-        trackAdapter?.onLongTrackClickListener = { deleteTrackFromPlaylist(it) }
+        trackAdapter.onTrackClickListener = { launchPlayerActivity(it) }
+        trackAdapter.onLongTrackClickListener = { deleteTrackFromPlaylist(it) }
     }
 
     private fun setupShare() {
@@ -177,7 +166,7 @@ class PlaylistFragment : Fragment() {
     }
 
     private fun sharePlaylist() {
-        if (trackAdapter!!.currentList.isNotEmpty()) {
+        if (trackAdapter.currentList.isNotEmpty()) {
             viewModel.sharingPlaylist()
         } else {
             Toast.makeText(
@@ -194,7 +183,7 @@ class PlaylistFragment : Fragment() {
             .setMessage(getString(R.string.message_dialog))
             .setNeutralButton(getString(R.string.cancel_dialog)) { _, _ -> }
             .setNegativeButton(getString(R.string.delete)) { _, _ ->
-                viewModel.deleteTrackFromPlaylist(track, trackAdapter!!.currentList)
+                viewModel.deleteTrackFromPlaylist(track, trackAdapter.currentList)
             }
             .show()
     }

@@ -4,38 +4,27 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import com.example.playlistmaker.databinding.FragmentFavoriteTracksBinding
 import com.example.playlistmaker.media.ui.model.FavoriteState
 import com.example.playlistmaker.media.ui.view_model.FavoriteTracksViewModel
 import com.example.playlistmaker.player.ui.activity.PlayerActivity
 import com.example.playlistmaker.search.domain.model.Track
 import com.example.playlistmaker.search.ui.adapter.TrackAdapter
+import com.example.playlistmaker.util.BindingFragment
 import com.google.gson.Gson
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class FavoriteTracksFragment : Fragment() {
+class FavoriteTracksFragment : BindingFragment<FragmentFavoriteTracksBinding>() {
 
-    private var favoriteAdapter: TrackAdapter? = null
-
-    private var isClickAllowed = true
-
-    private var _binding: FragmentFavoriteTracksBinding? = null
-
-    private val binding get() = _binding!!
+    private lateinit var favoriteAdapter: TrackAdapter
 
     private val viewModel: FavoriteTracksViewModel by viewModel()
 
-    override fun onCreateView(
+    override fun createBinding(
         inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentFavoriteTracksBinding.inflate(layoutInflater, container, false)
-        return binding.root
+        container: ViewGroup?
+    ): FragmentFavoriteTracksBinding {
+        return FragmentFavoriteTracksBinding.inflate(inflater, container, false)
     }
 
     override fun onResume() {
@@ -45,7 +34,6 @@ class FavoriteTracksFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setupRecyclerView()
 
         viewModel.getState.observe(viewLifecycleOwner) { state ->
@@ -53,16 +41,10 @@ class FavoriteTracksFragment : Fragment() {
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-        favoriteAdapter = null
-    }
-
     private fun setupRecyclerView() {
         favoriteAdapter = TrackAdapter()
         binding.recyclerViewFavoriteTracks.adapter = favoriteAdapter
-        favoriteAdapter!!.onTrackClickListener = { launchPlayerActivity(it) }
+        favoriteAdapter.onTrackClickListener = { launchPlayerActivity(it) }
     }
 
     private fun launchPlayerActivity(track: Track) {
@@ -74,18 +56,6 @@ class FavoriteTracksFragment : Fragment() {
                 )
             )
         }
-    }
-
-    private fun clickDebounce(): Boolean {
-        val current = isClickAllowed
-        if (isClickAllowed) {
-            isClickAllowed = false
-            viewLifecycleOwner.lifecycleScope.launch {
-                delay(CLICK_DEBOUNCE_DELAY_MILLIS)
-                isClickAllowed = true
-            }
-        }
-        return current
     }
 
     private fun render(state: FavoriteState) {
@@ -104,13 +74,10 @@ class FavoriteTracksFragment : Fragment() {
         binding.recyclerViewFavoriteTracks.visibility = View.VISIBLE
         binding.trackNotFound.visibility = View.GONE
 
-        favoriteAdapter?.submitList(tracks)
+        favoriteAdapter.submitList(tracks)
     }
-
 
     companion object {
         fun newInstance() = FavoriteTracksFragment()
-
-        private const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
     }
 }

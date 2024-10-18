@@ -33,7 +33,5 @@ val playerModule = module {
         )
     }
 
-    factory<MediaPlayer> {
-        MediaPlayer()
-    }
+    factory<MediaPlayer> { MediaPlayer() }
 }
