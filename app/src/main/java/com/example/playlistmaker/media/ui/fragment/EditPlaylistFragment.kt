@@ -16,12 +16,12 @@ import androidx.core.net.toUri
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentEditPlaylistBinding
 import com.example.playlistmaker.media.domain.model.Playlist
 import com.example.playlistmaker.media.ui.view_model.EditPlaylistViewModel
+import com.example.playlistmaker.util.BindingFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import java.io.File
@@ -29,27 +29,22 @@ import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.Date
 
-class EditPlaylistFragment : Fragment() {
+class EditPlaylistFragment : BindingFragment<FragmentEditPlaylistBinding>() {
 
     private var playlistId: Long? = null
     private var imageUriName: String? = null
     private var playlistName: String? = null
     private var playlistDescription: String? = null
-    private var _binding: FragmentEditPlaylistBinding? = null
-
-    private val binding get() = _binding!!
 
     private val viewModel: EditPlaylistViewModel by viewModel {
         parametersOf(playlistId)
     }
 
-    override fun onCreateView(
+    override fun createBinding(
         inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentEditPlaylistBinding.inflate(layoutInflater, container, false)
-        return binding.root
+        container: ViewGroup?
+    ): FragmentEditPlaylistBinding {
+        return FragmentEditPlaylistBinding.inflate(inflater, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -81,11 +76,6 @@ class EditPlaylistFragment : Fragment() {
         }
 
         binding.materialToolbar.setNavigationOnClickListener { findNavController().navigateUp() }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     private fun setupPlaylistInfo(playlist: Playlist) {

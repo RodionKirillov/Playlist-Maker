@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.playlistmaker.R
@@ -13,30 +12,24 @@ import com.example.playlistmaker.media.domain.model.Playlist
 import com.example.playlistmaker.media.ui.adapter.PlaylistAdapter
 import com.example.playlistmaker.media.ui.model.PlaylistState
 import com.example.playlistmaker.media.ui.view_model.PlaylistsViewModel
+import com.example.playlistmaker.util.BindingFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class PlaylistsFragment : Fragment() {
+class PlaylistsFragment : BindingFragment<FragmentPlaylistsBinding>() {
 
-    private var playlistAdapter: PlaylistAdapter? = null
-
-    private var _binding: FragmentPlaylistsBinding? = null
-
-    private val binding get() = _binding!!
+    private lateinit var playlistAdapter: PlaylistAdapter
 
     private val viewModel: PlaylistsViewModel by viewModel()
 
-    override fun onCreateView(
+    override fun createBinding(
         inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentPlaylistsBinding.inflate(layoutInflater, container, false)
-        return binding.root
+        container: ViewGroup?
+    ): FragmentPlaylistsBinding {
+        return FragmentPlaylistsBinding.inflate(inflater, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setupRecyclerView()
 
         viewModel.getState.observe(viewLifecycleOwner) { state ->
@@ -53,18 +46,12 @@ class PlaylistsFragment : Fragment() {
         viewModel.getPlaylists()
     }
 
-    override fun onDestroyView() {
-        _binding = null
-        playlistAdapter = null
-        super.onDestroyView()
-    }
-
     private fun setupRecyclerView() {
         playlistAdapter = PlaylistAdapter()
         binding.rvPlaylists.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.rvPlaylists.adapter = playlistAdapter
 
-        playlistAdapter?.onPlaylistClickListener = { playlist ->
+        playlistAdapter.onPlaylistClickListener = { playlist ->
             findNavController().navigate(
                 R.id.action_mediaFragment_to_playlistFragment,
                 PlaylistFragment.createArgs(playlist.playlistId)
@@ -82,16 +69,14 @@ class PlaylistsFragment : Fragment() {
     private fun showEmpty() {
         binding.rvPlaylists.visibility = View.GONE
         binding.llPlaylistsNotFound.visibility = View.VISIBLE
-
     }
 
     private fun showContent(playlists: List<Playlist>) {
         binding.rvPlaylists.visibility = View.VISIBLE
         binding.llPlaylistsNotFound.visibility = View.GONE
 
-        playlistAdapter?.submitList(playlists)
+        playlistAdapter.submitList(playlists)
     }
-
 
     companion object {
         fun newInstance() = PlaylistsFragment()

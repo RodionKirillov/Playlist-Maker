@@ -17,11 +17,11 @@ import androidx.core.content.ContextCompat.getColor
 import androidx.core.content.ContextCompat.getDrawable
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentCreatePlaylistBinding
 import com.example.playlistmaker.media.ui.view_model.CreatePlaylistViewModel
+import com.example.playlistmaker.util.BindingFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
@@ -29,10 +29,7 @@ import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.Date
 
-class CreatePlaylistFragment : Fragment() {
-
-    private var _binding: FragmentCreatePlaylistBinding? = null
-    private val binding get() = _binding!!
+class CreatePlaylistFragment : BindingFragment<FragmentCreatePlaylistBinding>() {
 
     private val viewModel: CreatePlaylistViewModel by viewModel()
 
@@ -46,13 +43,11 @@ class CreatePlaylistFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(
+    override fun createBinding(
         inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentCreatePlaylistBinding.inflate(layoutInflater, container, false)
-        return binding.root
+        container: ViewGroup?
+    ): FragmentCreatePlaylistBinding {
+        return FragmentCreatePlaylistBinding.inflate(inflater, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -81,7 +76,6 @@ class CreatePlaylistFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
         callback.isEnabled = false
     }
 
