@@ -5,11 +5,12 @@ import com.example.playlistmaker.util.Resource
 import kotlinx.coroutines.flow.Flow
 
 interface TrackRepository {
+
     fun searchTracks(expression: String): Flow<Resource<List<Track>>>
 
-    fun getTracks(): List<Track>
+    fun getTracksHistory(): List<Track>
 
-    fun saveTrack(track: Track)
+    fun saveTrackToHistory(track: Track)
 
-    fun clearTracks()
+    fun clearTrackHistory()
 }

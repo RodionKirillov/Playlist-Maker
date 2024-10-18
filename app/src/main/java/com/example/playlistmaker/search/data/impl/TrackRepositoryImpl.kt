@@ -1,6 +1,6 @@
 package com.example.playlistmaker.search.data.impl
 
-import com.example.playlistmaker.search.data.converters.SearchDtoConverter
+import com.example.playlistmaker.search.data.mappers.SearchMappers
 import com.example.playlistmaker.search.data.dto.TrackResponse
 import com.example.playlistmaker.search.data.dto.TrackSearchRequest
 import com.example.playlistmaker.search.data.source.MemoryClient
@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.flow
 class TrackRepositoryImpl(
     private val networkClient: NetworkClient,
     private val memoryClient: MemoryClient,
-    private val converter: SearchDtoConverter
+    private val mapper: SearchMappers
 ) : TrackRepository {
 
     override fun searchTracks(expression: String): Flow<Resource<List<Track>>> = flow {
@@ -23,43 +23,38 @@ class TrackRepositoryImpl(
         when (response.resultCode) {
 
             -1 -> {
-                emit(Resource.Error("Проверьте подключение к интернету"))
+                emit(Resource.Error(INTERNET_ERROR))
             }
+
 
             200 -> {
                 emit(
                     Resource.Success(
-                        converter.createTrackFromTrackDto((response as TrackResponse).results)
+                        mapper.createTrackFromTrackDto((response as TrackResponse).results)
                     )
                 )
             }
 
             else -> {
-                emit(Resource.Error("Ошибка сервера"))
+                emit(Resource.Error(SERVER_ERROR))
             }
         }
     }
 
-    override fun getTracks(): List<Track> {
-        val searchHistory = memoryClient.getSearchHistory()
-        return converter.createTrackFromTrackDto(searchHistory)
+    override fun getTracksHistory(): List<Track> {
+        return mapper.createTrackFromTrackDto(memoryClient.getSearchHistory())
     }
 
-    override fun saveTrack(track: Track) {
-        val historyTack = getTracks().toMutableList()
-        historyTack.removeAll { it.trackId == track.trackId }
-        historyTack.add(0, track)
-
-        if (historyTack.size > MAX_HISTORY_SIZE) historyTack.removeAt(historyTack.size - 1)
-
-        memoryClient.addSearchHistory(converter.createTrackDtoFromTrack(historyTack))
+    override fun saveTrackToHistory(track: Track) {
+        memoryClient.addSearchHistory(mapper.createTrackDtoFromTrack(track))
     }
 
-    override fun clearTracks() {
+    override fun clearTrackHistory() {
         memoryClient.clearSearchHistory()
     }
 
     companion object {
-        private const val MAX_HISTORY_SIZE = 10
+        private const val INTERNET_ERROR = "Проверьте подключение к интернету"
+        private const val SERVER_ERROR = "Ошибка сервера"
     }
 }

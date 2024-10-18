@@ -26,14 +26,14 @@ class TracksInteractorImpl(private val repository: TrackRepository) : TracksInte
     }
 
     override fun getTracks(): List<Track> {
-        return repository.getTracks()
+        return repository.getTracksHistory()
     }
 
     override fun saveTrack(track: Track) {
-        repository.saveTrack(track)
+        repository.saveTrackToHistory(track)
     }
 
     override fun clearTracks() {
-        repository.clearTracks()
+        repository.clearTrackHistory()
     }
 }
