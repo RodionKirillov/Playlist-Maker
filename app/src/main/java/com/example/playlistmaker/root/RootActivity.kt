@@ -11,13 +11,10 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class RootActivity : AppCompatActivity() {
 
-    private var _binding: ActivityRootBinding? = null
-    private val binding get() = _binding!!
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_root)
-        _binding = ActivityRootBinding.inflate(layoutInflater)
-        binding.root
+        val binding = ActivityRootBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.rootFragmentContainerView) as NavHostFragment
